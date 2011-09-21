@@ -29,8 +29,8 @@ sub full_service_feed {
         "ident & passwd of http://txodds.com API required for this action")
       unless ( $self->{ident} && $self->{passwd} );
 
-    my $BadObj = parse_xml(
-        get( $url, $self->{ident}, $self->{passwd}, @params ),
+    my $BadObj = $self->parse_xml(
+        $self->get( $url, $self->{ident}, $self->{passwd}, @params ),
         ForceArray => 'bookmaker'
     );
     return $BadObj;
@@ -100,7 +100,7 @@ Perhaps a little code snippet.
 
 =head1 AUTHOR
 
-"Foxcool", C<< <""> >>
+"Alexander Foxcool Babenko", C<< <"foxcool@cpan.org"> >>
 
 =head1 BUGS
 
