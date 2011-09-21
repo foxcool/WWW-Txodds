@@ -22,25 +22,52 @@ sub new {
 }
 
 sub full_service_feed {
-    my ( $self, @params ) = @_;
+    my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/xml.php';
 
     Carp::croak(
         "ident & passwd of http://txodds.com API required for this action")
       unless ( $self->{ident} && $self->{passwd} );
 
-    my $BadObj = $self->parse_xml(
-        $self->get( $url, $self->{ident}, $self->{passwd}, @params ),
-        ForceArray => 'bookmaker'
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
     );
+
+    my $BadObj =
+      $self->parse_xml( $self->get( $url, \%params ),
+        ForceArray => 'bookmaker' );
     return $BadObj;
+}
+
+sub sports {
+    my $self = shift;
+    my $response = $self->{ua}->get('http://xml2.txodds.com/feed/sports.php');
+    my $data = $self->{xml}->XMLin( $response->decoded_content, ValueAttr => [ 'sport', 'name' ] );
+
+    my %sports;
+    foreach (@$data) {
+        $sports{ $_->{id} } = $_->{name};
+    }
+    return %sports;
+}
+
+sub mgroups {
+    my $self = shift;
+    my $response = $self->get('http://xml2.txodds.com/feed/mgroups.php');
+    my $data = $self->parse_xml( $response->decoded_content, ValueAttr => [ 'mgroup', 'sportid' ] );
+    my %mgroups;
+    foreach (@$data) {
+        $mgroups{$_->{name}} = $_->{sportid};
+    }
+    return %mgroups;
 }
 
 sub create_get_request {
     my ( $self, $url, $params ) = @_;
 
     $url = URI->new($url);
-    $url->query_form(@$params);
+    $url->query_form(%$params);
 
     HTTP::Request::Common::GET($url);
 }
