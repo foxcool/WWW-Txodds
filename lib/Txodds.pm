@@ -34,16 +34,13 @@ sub full_service_feed {
         passwd => $self->{passwd}
     );
 
-    my $BadObj =
-      $self->parse_xml( $self->get( $url, \%params ),
-        ForceArray => 'bookmaker' );
-    return $BadObj;
+    return $self->parse_xml( $self->get( $url, \%params ), ForceArray => 'bookmaker' );
 }
 
 sub sports {
-    my $self = shift;
-    my $response = $self->{ua}->get('http://xml2.txodds.com/feed/sports.php');
-    my $data = $self->{xml}->XMLin( $response->decoded_content, ValueAttr => [ 'sport', 'name' ] );
+    my $self    = shift;
+    my $content = $self->get('http://xml2.txodds.com/feed/sports.php');
+    my $data = $self->parse_xml( $content, ValueAttr => [ 'sport', 'name' ] );
 
     my %sports;
     foreach (@$data) {
@@ -53,12 +50,13 @@ sub sports {
 }
 
 sub mgroups {
-    my $self = shift;
-    my $response = $self->get('http://xml2.txodds.com/feed/mgroups.php');
-    my $data = $self->parse_xml( $response->decoded_content, ValueAttr => [ 'mgroup', 'sportid' ] );
+    my $self    = shift;
+    my $content = $self->get('http://xml2.txodds.com/feed/mgroups.php');
+    my $data =
+      $self->parse_xml( $content, ValueAttr => [ 'mgroup', 'sportid' ] );
     my %mgroups;
     foreach (@$data) {
-        $mgroups{$_->{name}} = $_->{sportid};
+        $mgroups{ $_->{name} } = $_->{sportid};
     }
     return %mgroups;
 }
@@ -84,7 +82,7 @@ sub get {
 
     warn "GET<\n" if DEBUG;
 
-    return $response->content;
+    return $response->decoded_content;
 }
 
 sub parse_xml {
@@ -94,6 +92,46 @@ sub parse_xml {
 
     Carp::croak( "Wrong responce: " . $xml_string ) unless $obj;
 
+    return $obj;
+}
+
+sub clean_xml {
+    my ( $self, $BadObj ) = @_;
+    my %sports  = $self->sports();
+    my %mgroups = $self->mgroups();
+
+    my $obj->{'timestamp'} = $BadObj->{'timestamp'};
+    $obj->{time} = $BadObj->{'time'};
+    $obj->{'time'} =~ s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
+    while ( my ( $MatchId, $MatchObj ) = each %{ $BadObj->{match} } ) {
+        my $Home = $MatchObj->{hteam}->{ each %{ $MatchObj->{hteam} } }->{content};
+        my $Away = $MatchObj->{ateam}->{ each %{ $MatchObj->{ateam} } }->{content};
+        my $Group =$MatchObj->{group}->{ each %{ $MatchObj->{group} } }->{content};
+        my $MatchTime = $MatchObj->{'time'};
+        $MatchTime =~ s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
+        my $Sport = $sports{ $mgroups{$1} } if $Group =~ m/^([A-Z]+).*/;
+        $Group =~ s/^[A-Z]+ (.*)/$1/;
+
+        %{ $obj->{match}->{$Sport}->{$Group}->{"$Home - $Away"} } = (
+            MatchTime => $MatchTime,
+            Home      => $Home,
+            Away      => $Away
+        );
+
+        while ( my ( $BookmakerName, $BookmakerObj ) = each %{ $MatchObj->{bookmaker} } ) {
+            while ( my ( $OfferId, $OfferObj ) =  each %{ $BookmakerObj->{offer} } ) {
+                my $ot = $OfferObj->{ot};
+                if ( $ot == 0 && ($OfferObj->{odds}->[0]->{o1} || $OfferObj->{odds}->[0]->{o2} || $OfferObj->{odds}->[0]->{o3})) {
+                    %{ $obj->{match}->{$Sport}->{$Group}->{"$Home - $Away"}->{bookmaker}
+                          ->{$BookmakerName}->{offer}->{$ot} } = (
+                        1 => $OfferObj->{odds}->[0]->{o1},
+                        x => $OfferObj->{odds}->[0]->{o2},
+                        2 => $OfferObj->{odds}->[0]->{o3}
+                          );
+                }
+            }
+        }
+    }
     return $obj;
 }
 
