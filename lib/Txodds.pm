@@ -169,10 +169,11 @@ Working with http://txodds.com API.
 =head2 full_service_feed
 The Full Service Feed provides the same request options as the standard feed but supports the 
 following additional options.    
-    
-    $tx->full_service_feed();
+
+Usage:    
+    my $obj = $tx->full_service_feed();
     or
-    $tx->full_service_feed(%params);
+    my $obj = $tx->full_service_feed(%params);
     
 %params is a HASH with API request options:
     
@@ -346,26 +347,28 @@ Please see xml_schema function description
 
 An XML Schema definition is available that describes the Odds XML. This can be used by various
 development tools to simplify code generation/testing/feed parsing.
-    
-    http://xml2.txodds.com/feed/odds/odds.xsd
-    
-This function returns XML Schema from this URL.
+Usage:
+    my $schema = $tx->xml_schema();
+Response:    
+    This function returns XML Schema from http://xml2.txodds.com/feed/odds/odds.xsd.
 
 =head2 sports
 
 This service provides a complete list of sports used within the feeds.
-Function returns HASH:
-        {
-            sportid => 'sport name',
-            ...
-        }
+Usage:
+    my %sports = $tx->sports();
+Response:
+    {
+        sportid => 'sport name',
+        ...
+    }
 
 =head2 mgroups
     
 This function request all master groups from http://xml2.txodds.com/feed/mgroups.php.
  
 Usage:   
-    my %mgroups = mgroups();
+    my %mgroups = $tx->mgroups();
 Response:
     {
         name => 'sportid',
@@ -375,11 +378,27 @@ Options:
     active - (boolean) request only active master groups;
     spid - select by spid (sport identifier).
 Example:
-    my %mgroups = mgroups(
+    my %mgroups = $tx->mgroups(
         active => 1,
         spid   => 1
     );
     # select only soccer active groups
+
+=head2 get
+
+Send GET request and return response content.
+
+Usage:
+    my $data = $tx->get($url, \%params);
+%params contain GET parameters:
+    my $url = 'http://www.vasya.com/index.html'
+    my %params = (
+        user => 'vasya',
+        pass => 'paswd',
+        data => 'sometxt'
+    );
+    my $data = $tx->get( $url, \%params );
+    # GET http://www.vasya.com/index.html?user=vasya&pass=passwd&data=sometxt
 
 =head1 AUTHOR
 
