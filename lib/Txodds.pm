@@ -118,7 +118,7 @@ sub clean_xml {
         my $Sport = $sports{ $mgroups{$1} } if $Group =~ m/^([A-Z]+).*/;
         $Group =~ s/^[A-Z]+ (.*)/$1/;
 
-        %{ $obj->{match}->{$Sport}->{$Group}->{"$Home - $Away"} } = (
+        %{ $obj->{sport}->{$Sport}->{$Group}->{"$Home - $Away"} } = (
             MatchTime => $MatchTime,
             Home      => $Home,
             Away      => $Away
@@ -128,7 +128,7 @@ sub clean_xml {
             while ( my ( $OfferId, $OfferObj ) =  each %{ $BookmakerObj->{offer} } ) {
                 my $ot = $OfferObj->{ot};
                 if ( $ot == 0 && ($OfferObj->{odds}->[0]->{o1} || $OfferObj->{odds}->[0]->{o2} || $OfferObj->{odds}->[0]->{o3})) {
-                    %{ $obj->{match}->{$Sport}->{$Group}->{"$Home - $Away"}->{bookmaker}
+                    %{ $obj->{sport}->{$Sport}->{$Group}->{"$Home - $Away"}->{bookmaker}
                           ->{$BookmakerName}->{offer}->{$ot} } = (
                         1 => $OfferObj->{odds}->[0]->{o1},
                         x => $OfferObj->{odds}->[0]->{o2},
@@ -365,7 +365,7 @@ Response:
 
 =head2 mgroups
     
-This function request all master groups from http://xml2.txodds.com/feed/mgroups.php.
+This method request all master groups from http://xml2.txodds.com/feed/mgroups.php.
  
 Usage:   
     my %mgroups = $tx->mgroups();
@@ -389,7 +389,7 @@ Example:
 Send GET request and return response content.
 
 Usage:
-    my $data = $tx->get($url, \%params);
+    my $data = $tx->get( $url, \%params );
 Example:
     my $url = 'http://www.vasya.com/index.html'
     my %params = (
@@ -406,6 +406,66 @@ Usage:
     my $obj = $tx->parse_xml($xml_string, [Parser options]);
 Options:
     Function is use XML::LibXML::Simple module. See options of parser in documentation of this module.
+
+=head2 create_get_request
+
+Method create GET request with URI. Used by get().
+
+Usage:
+    my $request = $tx->create_get_request( $url, \%params );
+
+=head2 clean_xml
+
+Method for clean "bad" API data object, returned full_service_feed(): delete unnecessary nodes, add sport node etc.
+
+Usage:
+    my $BadObj = $tx->full_service_feed();
+    my $GoodObj = $tx->clean_xml($BadObj);
+Response:
+    {
+        'timestamp' => '%Timestamp%',
+        'time' => '%Time%',
+        'sport' => {
+            %SportName% => {
+                %GroupName% => {
+                    %MatchName% => {
+                        'bookmaker' => {
+                            %BookmakerName% => {
+                                'offer' => {
+                                    %OfferCode% => {
+                                        '1' => %Odd%,
+                                        'x' => %Odd%,
+                                        '2' => %Odd%
+                                    },
+                                    ...
+                                }
+                            }
+                            ...
+                        },
+                        'Home' => %HomeTeam%,
+                        'MatchTime' => %MatchTime%,
+                        'Away' => %AwayTeam%
+                    },
+                    ...
+                },
+                ...
+            },
+            ...
+        },
+    }
+
+    Where:
+        %Timestamp%      - Unix timestamp;
+        %Time%           - Current time 'hh:mm dd-mm-yyyy' (13:04 22-09-2011);
+        %SportName%      - Name of sport. See sports() method description;
+        %GroupName%      - Group, League, Division, etc.;
+        %MatchName%      - Name of match ('First comand\player' - 'Second comand\player');
+        %BookmakerName%  - Name of bookmaker;
+        %OfferCode%      - Offer code;
+        %Odd%            - Odd factor;
+        %HomeTeam%       - First comand, home comand, first player, or favorite etc.;
+        %AwayTeam%       - Second comand, home comand, second player etc.
+
 
 =head1 AUTHOR
 
