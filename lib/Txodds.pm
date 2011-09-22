@@ -390,7 +390,7 @@ Send GET request and return response content.
 
 Usage:
     my $data = $tx->get($url, \%params);
-%params contain GET parameters:
+Example:
     my $url = 'http://www.vasya.com/index.html'
     my %params = (
         user => 'vasya',
@@ -399,6 +399,13 @@ Usage:
     );
     my $data = $tx->get( $url, \%params );
     # GET http://www.vasya.com/index.html?user=vasya&pass=passwd&data=sometxt
+
+=head2 parse_xml
+
+Usage:
+    my $obj = $tx->parse_xml($xml_string, [Parser options]);
+Options:
+    Function is use XML::LibXML::Simple module. See options of parser in documentation of this module.
 
 =head1 AUTHOR
 
