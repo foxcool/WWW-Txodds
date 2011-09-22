@@ -50,8 +50,8 @@ sub sports {
 }
 
 sub mgroups {
-    my $self    = shift;
-    my $content = $self->get('http://xml2.txodds.com/feed/mgroups.php');
+    my ( $self, %params ) = @_;
+    my $content = $self->get('http://xml2.txodds.com/feed/mgroups.php', \%params);
     my $data =
       $self->parse_xml( $content, ValueAttr => [ 'mgroup', 'sportid' ] );
     my %mgroups;
@@ -167,91 +167,93 @@ Working with http://txodds.com API.
 =head1 SUBROUTINES/METHODS
 
 =head2 full_service_feed
-    The Full Service Feed provides the same request options as the standard feed but supports the 
-    following additional options.    
+The Full Service Feed provides the same request options as the standard feed but supports the 
+following additional options.    
     
     $tx->full_service_feed();
     or
     $tx->full_service_feed(%params);
     
-    %params is a HASH with API request options:
+%params is a HASH with API request options:
     
 =head3 Date search
 
-    The required date range to search
-    Usage: %options = (
-               date => 'StartDate,EndDate'
-           );
-    Example:
-        ...
-        date => '2007-06-01,2007-06-30',
-        ...
-    The date parameter accepts also the following values:
-        yesterday - Yesterdays results;
-        today     - Todays results;
-        tomorrow  - Tomorrows results;
-        now       - Current time + 24 hours;
-        next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
-    Note: You can also do date arithmetic using the following operators: -+ day / month / year
-    Examples:
-        date => 'today',
-        date => 'today,tomorrow +1 day',
-        date => 'now + 1 day',
-        date => 'next saturday',
-        date => '2009-3-24'
+The required date range to search
+Usage: %options = (
+           date => 'StartDate,EndDate'
+       );
+Example:
+    ...
+    date => '2007-06-01,2007-06-30',
+    ...
+The date parameter accepts also the following values:
+    yesterday - Yesterdays results;
+    today     - Todays results;
+    tomorrow  - Tomorrows results;
+    now       - Current time + 24 hours;
+    next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
+Note: You can also do date arithmetic using the following operators: -+ day / month / year
+Examples:
+    date => 'today',
+    date => 'today,tomorrow +1 day',
+    date => 'now + 1 day',
+    date => 'next saturday',
+    date => '2009-3-24'
 
 =head3 Day search
 
-    A simpler way to search uses the days option
-    Usage: %options = (
-               days => number
-           );
-           
-    Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
-    The xml days-parameter simplifies data loading. It now accepts the following format:
-        ...
-        days => 'n,r',
-        ...
-    where: n is the starting day relative to the current date and r is range (in days) so for example.
-    If the r parameter is not specified it works like before.
-    Example:
-        days => '0,1', # To return all of today’s odds
-        days => '0,2', # To return odds for the next 2 days
-        days => '1,1'  # To return tomorrow's odds
-        days => '0,-1' # To return yesterday's odds
-        days => '1'    # Today
-        days => '3'    # Next 3 days
-        days => '-1'   # Yesterday
-        days => '-3'   # Last 3 days
+A simpler way to search uses the days option
+Usage: %options = (
+           days => number
+       );
+       
+Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
+The xml days-parameter simplifies data loading. It now accepts the following format:
+    ...
+    days => 'n,r',
+    ...
+where: n is the starting day relative to the current date and r is range (in days) so for example.
+If the r parameter is not specified it works like before.
+Example:
+    days => '0,1', # To return all of today’s odds
+    days => '0,2', # To return odds for the next 2 days
+    days => '1,1'  # To return tomorrow's odds
+    days => '0,-1' # To return yesterday's odds
+    days => '1'    # Today
+    days => '3'    # Next 3 days
+    days => '-1'   # Yesterday
+    days => '-3'   # Last 3 days
 
 =head3 Hours Search
 
-    Hours parameter - now you can request any upcoming info within an hour range.
-    To get all matches/odds for any given time range by using the date parameter. For example this
-    returns all soccer fixtures for the next 24 hours:
-    
-    Example:
-        ...
-        date => 'now,now+24hour',
-        ...
+Hours parameter - now you can request any upcoming info within an hour range.
+To get all matches/odds for any given time range by using the date parameter. For example this
+returns all soccer fixtures for the next 24 hours:
+
+Example:
+    ...
+    date => 'now,now+24hour',
+    ...
         
 =head3 Fixtures & results
 
-    To choose between fixtures or final results you can use the result option
+To choose between fixtures or final results you can use the result option
     
-    Usage: %options = (
-               result => code
-           );
-    Codes:
-        0 - FIXTURE (To request FIXTURES only);
-        1 - RESULT (To request RESULTS only).
-    Example: %options = (
-                 result => 0
-             );
+Usage: 
+    %options = (
+           result => code
+    );
+Codes:
+    0 - FIXTURE (To request FIXTURES only);
+    1 - RESULT (To request RESULTS only).
+Example: 
+    %options = (
+         result => 0
+     );
 
 =head3 Response
 
-    full_service_feed function return a HASH object with data about matches, odds etc.
+full_service_feed function return a HASH object with data about matches, odds etc.
     
     {
         'timestamp' => '1316685278',
@@ -318,12 +320,12 @@ Working with http://txodds.com API.
 
 =head3 Full Service Feed XML document structure
 
-    The Full Service Feed XML document is an extension of the Standard Feed to provide the additional
-    information for fixtures, live scoring and final results information so please refer to the Standard XML
-    Feed description for the base structure details. In this section we will just document the additional
-    elements in the feed.
+The Full Service Feed XML document is an extension of the Standard Feed to provide the additional
+information for fixtures, live scoring and final results information so please refer to the Standard XML
+Feed description for the base structure details. In this section we will just document the additional
+elements in the feed.
     
-    The XML document is made up of the following ten elements:-
+The XML document is made up of the following ten elements:
 
     • XML Declaration
     • Matches Container
@@ -338,17 +340,46 @@ Working with http://txodds.com API.
         
 =head3 Odds XML Schema Definition (XSD)
 
-    Please see xml_schema function description
+Please see xml_schema function description
 
 =head2 xml_schema
 
-    An XML Schema definition is available that describes the Odds XML. This can be used by various
-    development tools to simplify code generation/testing/feed parsing.
+An XML Schema definition is available that describes the Odds XML. This can be used by various
+development tools to simplify code generation/testing/feed parsing.
     
     http://xml2.txodds.com/feed/odds/odds.xsd
     
-    This function returns XML Schema from this URL.
+This function returns XML Schema from this URL.
 
+=head2 sports
+
+This service provides a complete list of sports used within the feeds.
+Function returns HASH:
+        {
+            sportid => 'sport name',
+            ...
+        }
+
+=head2 mgroups
+    
+This function request all master groups from http://xml2.txodds.com/feed/mgroups.php.
+ 
+Usage:   
+    my %mgroups = mgroups();
+Response:
+    {
+        name => 'sportid',
+        ...
+    }   
+Options:
+    active - (boolean) request only active master groups;
+    spid - select by spid (sport identifier).
+Example:
+    my %mgroups = mgroups(
+        active => 1,
+        spid   => 1
+    );
+    # select only soccer active groups
 
 =head1 AUTHOR
 
