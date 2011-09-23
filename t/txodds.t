@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More 'no_plan';
+use Test::More tests => 3;
 use Txodds;
 
 my $tx = Txodds->new();
