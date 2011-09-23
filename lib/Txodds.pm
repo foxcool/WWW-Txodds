@@ -181,13 +181,16 @@ Usage:
 =head3 Date search
 
 The required date range to search
+
 Usage: %options = (
            date => 'StartDate,EndDate'
        );
+
 Example:
     ...
     date => '2007-06-01,2007-06-30',
     ...
+
 The date parameter accepts also the following values:
     yesterday - Yesterdays results;
     today     - Todays results;
@@ -195,6 +198,7 @@ The date parameter accepts also the following values:
     now       - Current time + 24 hours;
     next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
 Note: You can also do date arithmetic using the following operators: -+ day / month / year
+
 Examples:
     date => 'today',
     date => 'today,tomorrow +1 day',
@@ -205,6 +209,7 @@ Examples:
 =head3 Day search
 
 A simpler way to search uses the days option
+
 Usage: %options = (
            days => number
        );
@@ -216,6 +221,7 @@ The xml days-parameter simplifies data loading. It now accepts the following for
     ...
 where: n is the starting day relative to the current date and r is range (in days) so for example.
 If the r parameter is not specified it works like before.
+
 Example:
     days => '0,1', # To return all of today’s odds
     days => '0,2', # To return odds for the next 2 days
@@ -245,9 +251,11 @@ Usage:
     %options = (
            result => code
     );
+
 Codes:
     0 - FIXTURE (To request FIXTURES only);
     1 - RESULT (To request RESULTS only).
+
 Example: 
     %options = (
          result => 0
@@ -329,9 +337,9 @@ elements in the feed.
     
 The XML document is made up of the following ten elements:
 
-    • XML Declaration
-    • Matches Container
-    • Match Element
+    * XML Declaration
+    * Matches Container
+    * Match Element
         o Bookmaker Element
         o Offer Element
         o Odds Element
@@ -348,16 +356,20 @@ Please see xml_schema function description
 
 An XML Schema definition is available that describes the Odds XML. This can be used by various
 development tools to simplify code generation/testing/feed parsing.
+
 Usage:
     my $schema = $tx->xml_schema();
+
 Response:    
     This function returns XML Schema from http://xml2.txodds.com/feed/odds/odds.xsd.
 
 =head2 sports
 
 This service provides a complete list of sports used within the feeds.
+
 Usage:
     my %sports = $tx->sports();
+
 Response:
     {
         sportid => 'sport name',
@@ -370,14 +382,17 @@ This method request all master groups from http://xml2.txodds.com/feed/mgroups.p
  
 Usage:   
     my %mgroups = $tx->mgroups();
+
 Response:
     {
         name => 'sportid',
         ...
     }   
+
 Options:
     active - (boolean) request only active master groups;
     spid - select by spid (sport identifier).
+
 Example:
     my %mgroups = $tx->mgroups(
         active => 1,
@@ -391,6 +406,7 @@ Send GET request and return response content.
 
 Usage:
     my $data = $tx->get( $url, \%params );
+
 Example:
     my $url = 'http://www.vasya.com/index.html'
     my %params = (
@@ -405,6 +421,7 @@ Example:
 
 Usage:
     my $obj = $tx->parse_xml($xml_string, [Parser options]);
+
 Options:
     Function is use XML::LibXML::Simple module. See options of parser in documentation of this module.
 
@@ -422,6 +439,7 @@ Method for clean "bad" API data object, returned full_service_feed(): delete unn
 Usage:
     my $BadObj = $tx->full_service_feed();
     my $GoodObj = $tx->clean_obj($BadObj);
+
 Response:
     {
         'timestamp' => '%Timestamp%',
