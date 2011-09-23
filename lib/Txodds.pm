@@ -101,7 +101,7 @@ sub parse_xml {
     return $obj;
 }
 
-sub clean_xml {
+sub clean_obj {
     my ( $self, $BadObj ) = @_;
     my %sports  = $self->sports();
     my %mgroups = $self->mgroups();
@@ -414,13 +414,13 @@ Method create GET request with URI. Used by get().
 Usage:
     my $request = $tx->create_get_request( $url, \%params );
 
-=head2 clean_xml
+=head2 clean_obj
 
 Method for clean "bad" API data object, returned full_service_feed(): delete unnecessary nodes, add sport node etc.
 
 Usage:
     my $BadObj = $tx->full_service_feed();
-    my $GoodObj = $tx->clean_xml($BadObj);
+    my $GoodObj = $tx->clean_obj($BadObj);
 Response:
     {
         'timestamp' => '%Timestamp%',
