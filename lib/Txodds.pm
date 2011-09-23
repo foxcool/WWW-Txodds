@@ -167,6 +167,7 @@ Working with http://txodds.com API.
 =head1 SUBROUTINES/METHODS
 
 =head2 full_service_feed
+
 The Full Service Feed provides the same request options as the standard feed but supports the 
 following additional options.    
 
