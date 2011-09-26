@@ -9,7 +9,7 @@ require LWP::UserAgent;
 require XML::LibXML::Simple;
 require Carp;
 
-our $VERSION = '0.51';
+our $VERSION = '0.64';
 use constant DEBUG => $ENV{TXODDS_DEBUG} || 0;
 
 sub new {
@@ -59,6 +59,20 @@ sub mgroups {
         $mgroups{ $_->{name} } = $_->{sportid};
     }
     return %mgroups;
+}
+
+sub odds_types {
+    my $self = shift;
+    my $content = $self->get('http://xml2.txodds.com/feed/odds_types.php');
+    my $data = $self->parse_xml( $content, ValueAttr => [ 'type' ] );
+    unless (@_) {
+        my %obj;
+        foreach (@$data) {
+            $obj{$_->{ot}} = $_->{name};
+        }
+        return \%obj;
+    }
+    else {return $data;}
 }
 
 sub xml_schema {
@@ -400,6 +414,40 @@ Example:
     );
     # select only soccer active groups
 
+=head2 odds_types
+
+This method return all odds types.
+
+Usage:
+    my %types = $tx->odds_types();
+
+Response:
+    {
+        '1' => 'money line',
+        '0' => 'three way',
+        '3' => 'points',
+        '4' => 'totals',
+        '5' => 'asian handicap'
+        ...
+    };
+
+Options:
+    any option (see example)
+    
+Example:
+    my %types = $tx->odds_types('full');
+    #return full response
+
+Response:
+    [
+        {
+            'sname' => '1x2',
+            'name' => 'three way',
+            'ot' => '0'
+        },
+        ...
+    ]
+
 =head2 get
 
 Send GET request and return response content.
@@ -488,7 +536,7 @@ Response:
 
 =head1 AUTHOR
 
-"Alexander Foxcool Babenko", C<< <"foxcool@cpan.org"> >>
+"Alexander Foxcool Babenko", C<<"foxcool@cpan.org">>
 
 =head1 BUGS
 
@@ -500,6 +548,8 @@ automatically be notified of progress on your bug as I make changes.
 
 
 =head1 SUPPORT
+
+For more information please see C<<http://txodds.com/v2/0/services.xml.html>>.
 
 You can find documentation for this module with the perldoc command.
 
