@@ -75,6 +75,22 @@ sub odds_types {
     else {return $data;}
 }
 
+sub offer_amounts {
+    my ( $self, %params ) = @_;
+    my $content = $self->get('http://xml2.txodds.com/feed/offer_amounts.php', \%params);
+    my $data = $self->parse_xml( $content, ValueAttr => [ 'offer' ] );
+    my %obj;
+    use Data::Dumper;
+    print ref $data;
+    if (ref $data eq 'ARRAY') {
+        foreach (@$data) { $obj{$_->{boid}} = $_->{amount}; }
+    }
+    elsif (ref $data eq 'HASH') {
+        $obj{$$data{boid}} = $$data{amount};
+    }
+    return \%obj;
+}
+
 sub xml_schema {
     my $self = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds/odds.xsd');
@@ -416,7 +432,8 @@ Example:
 
 =head2 odds_types
 
-This method return all odds types.
+This method return all odds types. For more information see
+Appendix 13 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
 
 Usage:
     my %types = $tx->odds_types();
@@ -432,7 +449,7 @@ Response:
     };
 
 Options:
-    any option (see example)
+    any option (see example) will return full response
     
 Example:
     my %types = $tx->odds_types('full');
@@ -447,6 +464,34 @@ Response:
         },
         ...
     ]
+
+=head2 offer_amounts
+
+This servise is reversed for including exchange matched amounts for standard odds. For more information see
+Appendix 12 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
+Usage:
+    my %oa = $tx->offer_amounts(date => '2011-04-02');
+
+Options:
+    date:
+        YYYY-MM-DD            - For a cpecific date;
+        YYY-MM-DD, YYYY-MM-DD - For a cpecific date range;
+        today                 - Just for today;
+        today+7               - For today plus 7 days;
+    spid (Sport Id):
+        1 - soccer;
+        2 - hockey;
+        Please see sports() for all sport id codes;
+     boid (Bet Offer Id):
+        xxxxxxx - Single bet offer id;
+        xxxxxxx, yyyyyyy, zzzzzzz - multiple bet offer id;
+
+Response:
+    {
+        %boid% => %amount%,
+        ...
+    }
 
 =head2 get
 
@@ -549,7 +594,9 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
-For more information please see C<<http://txodds.com/v2/0/services.xml.html>>.
+GitHub: C<<https://github.com/Foxcool/Txodds>>
+
+For more information about TXOdds API please see C<<http://txodds.com/v2/0/services.xml.html>>.
 
 You can find documentation for this module with the perldoc command.
 
