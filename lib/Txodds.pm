@@ -104,7 +104,7 @@ sub deleted_ap_offers {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/deleted_ap_offers.php';
     Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action" )
+        "ident & passwd of http://txodds.com API required for this action")
       unless ( $self->{ident} && $self->{passwd} );
 
     %params = (
@@ -112,6 +112,14 @@ sub deleted_ap_offers {
         passwd => $self->{passwd}
     );
     return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
+sub countries {
+    my $self = shift;
+    my $content =
+      $self->get('http://xml2.txodds.com/feed/countries.php');
+    my $data = $self->parse_xml( $content, ValueAttr => ['country'] );
+    return $data;
 }
 
 sub xml_schema {
@@ -575,6 +583,22 @@ Method have mandatory options:
 
 Usage:
     my $offers = $tx->deleted_ap_offers();
+
+=head2 countries
+
+Country codes
+
+Usage:
+    $countries = $tx->countries();
+
+Response:
+    [
+        {
+            'cc'   => 'IRI',
+            'name' => 'Iran',
+            'id'   => '361'
+        }
+    ]
 
 =head2 get
 
