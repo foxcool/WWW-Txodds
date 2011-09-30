@@ -34,7 +34,8 @@ sub full_service_feed {
         passwd => $self->{passwd}
     );
 
-    return $self->parse_xml( $self->get( $url, \%params ), ForceArray => 'bookmaker' );
+    return $self->parse_xml( $self->get( $url, \%params ),
+        ForceArray => 'bookmaker' );
 }
 
 sub sports {
@@ -51,7 +52,8 @@ sub sports {
 
 sub mgroups {
     my ( $self, %params ) = @_;
-    my $content = $self->get('http://xml2.txodds.com/feed/mgroups.php', \%params);
+    my $content =
+      $self->get( 'http://xml2.txodds.com/feed/mgroups.php', \%params );
     my $data =
       $self->parse_xml( $content, ValueAttr => [ 'mgroup', 'sportid' ] );
     my %mgroups;
@@ -62,44 +64,58 @@ sub mgroups {
 }
 
 sub odds_types {
-    my $self = shift;
+    my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds_types.php');
-    my $data = $self->parse_xml( $content, ValueAttr => [ 'type' ] );
+    my $data    = $self->parse_xml( $content, ValueAttr => ['type'] );
     unless (@_) {
         my %obj;
         foreach (@$data) {
-            $obj{$_->{ot}} = $_->{name};
+            $obj{ $_->{ot} } = $_->{name};
         }
         return \%obj;
     }
-    else {return $data;}
+    else { return $data; }
 }
 
 sub offer_amounts {
     my ( $self, %params ) = @_;
-    my $content = $self->get('http://xml2.txodds.com/feed/offer_amounts.php', \%params);
-    my $data = $self->parse_xml( $content, ValueAttr => [ 'offer' ] );
+    my $content =
+      $self->get( 'http://xml2.txodds.com/feed/offer_amounts.php', \%params );
+    my $data = $self->parse_xml( $content, ValueAttr => ['offer'] );
     my %obj;
-    use Data::Dumper;
-    print ref $data;
-    if (ref $data eq 'ARRAY') {
-        foreach (@$data) { $obj{$_->{boid}} = $_->{amount}; }
+    if ( ref $data eq 'ARRAY' ) {
+        foreach (@$data) { $obj{ $_->{boid} } = $_->{amount}; }
     }
-    elsif (ref $data eq 'HASH') {
-        $obj{$$data{boid}} = $$data{amount};
+    elsif ( ref $data eq 'HASH' ) {
+        $obj{ $$data{boid} } = $$data{amount};
     }
     return \%obj;
 }
 
 sub ap_offer_amounts {
     my $self = shift;
-    my $content = $self->get('http://xml2.txodds.com/feed/ap_offer_amounts.php');
-    my $data = $self->parse_xml( $content, ValueAttr => [ 'offer' ] );
+    my $content =
+      $self->get('http://xml2.txodds.com/feed/ap_offer_amounts.php');
+    my $data = $self->parse_xml( $content, ValueAttr => ['offer'] );
     return $data;
 }
 
+sub deleted_ap_offers {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/deleted_ap_offers.php';
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action" )
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
 sub xml_schema {
-    my $self = shift;
+    my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds/odds.xsd');
     return $content;
 }
@@ -145,13 +161,18 @@ sub clean_obj {
 
     my $obj->{'timestamp'} = $BadObj->{'timestamp'};
     $obj->{time} = $BadObj->{'time'};
-    $obj->{'time'} =~ s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
+    $obj->{'time'} =~
+s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
     while ( my ( $MatchId, $MatchObj ) = each %{ $BadObj->{match} } ) {
-        my $Home = $MatchObj->{hteam}->{ each %{ $MatchObj->{hteam} } }->{content};
-        my $Away = $MatchObj->{ateam}->{ each %{ $MatchObj->{ateam} } }->{content};
-        my $Group =$MatchObj->{group}->{ each %{ $MatchObj->{group} } }->{content};
+        my $Home =
+          $MatchObj->{hteam}->{ each %{ $MatchObj->{hteam} } }->{content};
+        my $Away =
+          $MatchObj->{ateam}->{ each %{ $MatchObj->{ateam} } }->{content};
+        my $Group =
+          $MatchObj->{group}->{ each %{ $MatchObj->{group} } }->{content};
         my $MatchTime = $MatchObj->{'time'};
-        $MatchTime =~ s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
+        $MatchTime =~
+s/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\+\d{2}:\d{2}/$4:$5 $3-$2-$1/;
         my $Sport = $sports{ $mgroups{$1} } if $Group =~ m/^([A-Z]+).*/;
         $Group =~ s/^[A-Z]+ (.*)/$1/;
 
@@ -161,12 +182,22 @@ sub clean_obj {
             Away      => $Away
         );
 
-        while ( my ( $BookmakerName, $BookmakerObj ) = each %{ $MatchObj->{bookmaker} } ) {
-            while ( my ( $OfferId, $OfferObj ) =  each %{ $BookmakerObj->{offer} } ) {
+        while ( my ( $BookmakerName, $BookmakerObj ) =
+            each %{ $MatchObj->{bookmaker} } )
+        {
+            while ( my ( $OfferId, $OfferObj ) =
+                each %{ $BookmakerObj->{offer} } )
+            {
                 my $ot = $OfferObj->{ot};
-                if ( $ot == 0 && ($OfferObj->{odds}->[0]->{o1} || $OfferObj->{odds}->[0]->{o2} || $OfferObj->{odds}->[0]->{o3})) {
-                    %{ $obj->{sport}->{$Sport}->{$Group}->{"$Home - $Away"}->{bookmaker}
-                          ->{$BookmakerName}->{offer}->{$ot} } = (
+                if (
+                    $ot == 0
+                    && (   $OfferObj->{odds}->[0]->{o1}
+                        || $OfferObj->{odds}->[0]->{o2}
+                        || $OfferObj->{odds}->[0]->{o3} )
+                  )
+                {
+                    %{ $obj->{sport}->{$Sport}->{$Group}->{"$Home - $Away"}
+                          ->{bookmaker}->{$BookmakerName}->{offer}->{$ot} } = (
                         1 => $OfferObj->{odds}->[0]->{o1},
                         x => $OfferObj->{odds}->[0]->{o2},
                         2 => $OfferObj->{odds}->[0]->{o3}
@@ -506,7 +537,7 @@ Antepost Exchange Mathed Amounts Servise. This servise is resersed for including
 For more information see Appendix 11 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
 
 Usage:
-    my %oa = $tx->ap_offer_amounts();
+    my $oa = $tx->ap_offer_amounts();
 
 Response:
     [
@@ -530,6 +561,20 @@ Response:
     %amount% - monetary value of amounts of matched bets on exchanges;
     %BookmakerId% - bookmaker (exchange) identify code;
     %pgid% - offer id code. This maps directly to the offer id specified in the offer element section.
+
+=head2 deleted_ap_offers
+
+This servise allows a search for deleted offers on Antepost feed.
+An offer refers to market/bookie/team combination.
+When an offer for team is no longer 'valid' the offer id is available
+on this webservise ths providing a complete audit trail of what has been available. 
+
+Method have mandatory options:
+    ident;
+    passwd.
+
+Usage:
+    my $offers = $tx->deleted_ap_offers();
 
 =head2 get
 
