@@ -91,6 +91,13 @@ sub offer_amounts {
     return \%obj;
 }
 
+sub ap_offer_amounts {
+    my $self = shift;
+    my $content = $self->get('http://xml2.txodds.com/feed/ap_offer_amounts.php');
+    my $data = $self->parse_xml( $content, ValueAttr => [ 'offer' ] );
+    return $data;
+}
+
 sub xml_schema {
     my $self = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds/odds.xsd');
@@ -467,7 +474,7 @@ Response:
 
 =head2 offer_amounts
 
-This servise is reversed for including exchange matched amounts for standard odds. For more information see
+This servise is resersed for including exchange matched amounts for standard odds. For more information see
 Appendix 12 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
 
 Usage:
@@ -492,6 +499,37 @@ Response:
         %boid% => %amount%,
         ...
     }
+
+=head2 ap_offer_amounts
+
+Antepost Exchange Mathed Amounts Servise. This servise is resersed for including exchange matched amounts.
+For more information see Appendix 11 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
+Usage:
+    my %oa = $tx->ap_offer_amounts();
+
+Response:
+    [
+        {
+            'amount' => %amount%,
+            'bid'    => %BookmakerId%,
+            'pgid'   => %pgid%
+        }
+        ...
+    ]
+    
+    or
+    
+    {
+        'amount' => %amount%,
+        'bid'    => %BookmakerId%,
+        'pgid'   => %pgid%
+    }
+    if amount is single.
+    
+    %amount% - monetary value of amounts of matched bets on exchanges;
+    %BookmakerId% - bookmaker (exchange) identify code;
+    %pgid% - offer id code. This maps directly to the offer id specified in the offer element section.
 
 =head2 get
 
