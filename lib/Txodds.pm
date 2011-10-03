@@ -147,7 +147,21 @@ sub deleted_peids {
         ident  => $self->{ident},
         passwd => $self->{passwd}
     );
-    return $self->parse_xml( $self->get( $url, \%params ), ValueAttr => ['peid'] );
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
+sub deleted_boids {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/deleted_boids.php';
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+    return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub xml_schema {
@@ -664,6 +678,8 @@ When a match is longer ‘valid’ its id is available on this webservice.
 For example when a match has finished then it may need to be removed from any monitoring
 application or database.
 
+For more information see Appendix 5 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
 Usage:
     my $peids = $tx->deleted_peids();
 
@@ -682,19 +698,41 @@ Response:
             '345810' => {
                 'time' => '2008-02-13T00:57:48+00:00'
             },
-            '345817' => {
-                'time' => '2008-02-13T06:27:43+00:00'
-            },
-            '345806' => {
-               'time' => '2008-02-13T00:27:18+00:00'
-            },
-            '345813' => {
-                'time' => '2008-02-13T01:27:59+00:00'
-            }
         },
         'timestamp' => '1202887315',
         'time' => '2008-02-13T07:21:55+00:00'
     };
+
+=head2 deleted_boids
+
+When an extraction or verification of odds fails the unique odds id is available on this webservice.
+For example if a bookmaker takes down their website for maintenance their odds are no longer
+valid they may need to be removed from any monitoring application or database.
+
+For more information see Appendix 4 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
+Usage:
+    my $boids = $tx->deleted_boids();
+
+Options:
+    last - select by timestamp;
+
+Response:
+    {
+        'timestamp' => '1202887171',
+        'time' => '2008-02-13T07:19:31+00:00',
+        'boid' => {
+            '23674997' => {
+                'time' => '2008-02-13T00:27:18+00:00'
+            },
+            '23674994' => {
+                'time' => '2008-02-13T00:27:18+00:00'
+            },
+            '23675000' => {
+                'time' => '2008-02-13T00:27:18+00:00'
+            },
+        }
+    }
 
 =head2 get
 
