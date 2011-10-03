@@ -122,6 +122,20 @@ sub countries {
     return $data;
 }
 
+sub competitors {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/competitors.php';
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+    return $self->parse_xml( $self->get( $url, \%params ), ValueAttr => ['competitor'] );
+}
+
 sub xml_schema {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds/odds.xsd');
@@ -599,6 +613,36 @@ Response:
             'id'   => '361'
         }
     ]
+
+=head2 competitors
+
+Competitors webservice
+This webservice provides a comprehensive list of team and players names used by the feed.
+For more information see Appendix 6 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
+Usage:
+    my $competitors = $tx->competitors();
+
+Options:
+    pid     - by participant id i.e. the unique competitor number;
+    pgrp    - by participant group name a combination of the sport and country (or league for US Sports) e.g. fbjpn is football Japan;
+    cid     - by country id all competitors or teams within a particular country;
+    spid    - by sport id – every sport has a unique identifier;
+    name    - by alias name selection – shows all competitors that include a particular string.
+
+Response:
+    [
+        {
+            'group' => 'fbeng',
+            'name' => 'Liverpool',
+            'id' => '2452'
+        },
+        {
+            'group' => 'fbeng',
+            'name' => 'Liverpool B',
+            'id' => '7965'
+        }
+    ];
 
 =head2 get
 
