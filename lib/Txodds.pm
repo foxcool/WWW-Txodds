@@ -136,6 +136,20 @@ sub competitors {
     return $self->parse_xml( $self->get( $url, \%params ), ValueAttr => ['competitor'] );
 }
 
+sub deleted_peids {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/deleted_peids.php';
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+    return $self->parse_xml( $self->get( $url, \%params ), ValueAttr => ['peid'] );
+}
+
 sub xml_schema {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/odds/odds.xsd');
@@ -643,6 +657,44 @@ Response:
             'id' => '7965'
         }
     ];
+
+=head2 deleted_peids
+
+When a match is longer ‘valid’ its id is available on this webservice.
+For example when a match has finished then it may need to be removed from any monitoring
+application or database.
+
+Usage:
+    my $peids = $tx->deleted_peids();
+
+Options:
+    last - select by timestamp;
+
+Response:
+    {
+        'peid' => {
+            '345819' => {
+                'time' => '2008-02-13T06:57:48+00:00'
+            },
+            '345816' => {
+                'time' => '2008-02-13T05:57:07+00:00'
+            },
+            '345810' => {
+                'time' => '2008-02-13T00:57:48+00:00'
+            },
+            '345817' => {
+                'time' => '2008-02-13T06:27:43+00:00'
+            },
+            '345806' => {
+               'time' => '2008-02-13T00:27:18+00:00'
+            },
+            '345813' => {
+                'time' => '2008-02-13T01:27:59+00:00'
+            }
+        },
+        'timestamp' => '1202887315',
+        'time' => '2008-02-13T07:21:55+00:00'
+    };
 
 =head2 get
 
