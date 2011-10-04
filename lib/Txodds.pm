@@ -115,10 +115,9 @@ sub deleted_ap_offers {
 }
 
 sub countries {
-    my $self = shift;
-    my $content =
-      $self->get('http://xml2.txodds.com/feed/countries.php');
-    my $data = $self->parse_xml( $content, ValueAttr => ['country'] );
+    my $self    = shift;
+    my $content = $self->get('http://xml2.txodds.com/feed/countries.php');
+    my $data    = $self->parse_xml( $content, ValueAttr => ['country'] );
     return $data;
 }
 
@@ -133,7 +132,8 @@ sub competitors {
         ident  => $self->{ident},
         passwd => $self->{passwd}
     );
-    return $self->parse_xml( $self->get( $url, \%params ), ValueAttr => ['competitor'] );
+    return $self->parse_xml( $self->get( $url, \%params ),
+        ValueAttr => ['competitor'] );
 }
 
 sub deleted_peids {
@@ -163,6 +163,22 @@ sub deleted_boids {
     );
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
+
+sub groups {
+    my ( $self, %params ) = @_;
+    my $content = $self->get( 'http://xml2.txodds.com/feed/groups.php', \%params );
+    my $data = $self->parse_xml( $content, ValueAttr => ['group'] );
+
+    return $data;
+}
+
+sub books {
+    my ( $self, %params ) = @_;
+    my $content = $self->get( 'http://xml2.txodds.com/feed/books.php', \%params );
+    my $data = $self->parse_xml( $content, ValueAttr => ['bookmaker'] );
+
+    return $data;
+} 
 
 sub xml_schema {
     my $self    = shift;
@@ -733,6 +749,113 @@ Response:
             },
         }
     }
+
+=head2 groups 
+
+This method request league or event names. See Appendix 3 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>) for more info.
+
+Usage:
+    my $groups = $tx->groups();
+
+Options:
+    sid  - select by year / season:
+        ...
+        sid => '08,09'
+        # To find the leagues or events starting in 2008 and 2009;
+    mgid - Select by master group:
+        ...
+        mgid => 1027
+        # To find the International soccer;
+
+Example:
+    my $groups = $tx->groups({sid => '08,09', mgid => 1027});
+
+Response:
+    [
+        {
+            'sid' => '08',
+            'date2' => '2009-01-01 00:00:00',
+            'date1' => '2007-01-05 00:00:00',
+            'fullname' => 'FBINT UEFA U21 Championship-08',
+            'name' => 'UEFA U21 Championship',
+            'mgroup' => {
+                'content' => 'FBINT',
+                'id' => '1027'
+            },
+            'id' => '3220'
+        },
+        {
+            'sid' => '08',
+            'date2' => '2008-12-12 00:00:00',
+            'date1' => '2008-01-01 00:00:00',
+            'fullname' => 'FBINT Africa Cup of Nations-08',
+            'name' => 'Africa Cup of Nations',
+            'mgroup' => {
+                'content' => 'FBINT',
+                'id' => '1027'
+            },
+            'id' => '3690'
+        },
+        {
+            'sid' => '08',
+            'date2' => '2008-12-23 00:00:00',
+            'date1' => '2008-01-01 00:00:00',
+            'fullname' => 'FBINT Pan-Pacific Champions-08',
+            'name' => 'Pan-Pacific Champions',
+            'mgroup' => {
+                'content' => 'FBINT',
+                'id' => '1027'
+            },
+            'id' => '3751'
+        },
+        ...
+    ]
+    Where:
+        id       - TXODDS group id code;
+        mgroup   - master group. See mgroups();
+        name     - league or event text name;
+        sid      - season ID or year of the event / league;
+        fullname - full description including the league / event name and the season / year information;
+        date1    - start date for this event / league;
+        date2    - end date for this event / league.
+
+=head2 books
+
+Bookmaker codes. More info in Appendix 3 of PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>.
+
+Usage:
+    my $bookmakers = $tx->books();
+
+Options:
+    active - request all active bookmakers:
+        ...
+        active => 1,
+        ...
+    ot     - the odds type to search for:
+        ...
+        ot => 5,
+        # or
+        ot => '3,4',
+
+Response:
+    [
+        {
+            'flags' => '19',
+            'name' => 'Centrebet',
+            'id' => '2'
+        },
+        {
+            'flags' => '19',
+            'name' => 'Admiral',
+            'id' => '4'
+        },
+        {
+            'flags' => '19',
+            'name' => 'Expekt',
+            'id' => '5'
+        },
+        ...
+    ]
 
 =head2 get
 
