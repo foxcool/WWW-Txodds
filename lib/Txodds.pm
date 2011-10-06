@@ -285,7 +285,7 @@ Txodds - TXOdds.com API Perl interface.
 
 =head1 VERSION
 
-Version 0.51
+Version 0.65
 
 =head1 SYNOPSIS
 
@@ -621,7 +621,22 @@ odds_feed function return a HASH object with data about matches, odds etc.
         }
     }
 
-=head3 Full Service Feed XML document structure
+=head3 Standart Feed and Full Service Feed XML document structure
+
+Basic XML document structure
+
+The basic TXODDS XML document is structurally rather simple. Each element may have multiple
+sub-elements based upon your request.
+The XML document is made up of the following six elements:
+
+    * XML Declaration
+    * Matches Container
+    * Match Element
+    * Bookmaker Element
+    * Offer Element
+    * Odds Element
+
+These are all comprehensively described below.
 
 The Full Service Feed XML document is an extension of the Standard Feed to provide the additional
 information for fixtures, live scoring and final results information so please refer to the Standard XML
@@ -1104,7 +1119,7 @@ Response:
 
 =head1 AUTHOR
 
-"Alexander Foxcool Babenko", C<<"foxcool@cpan.org">>
+"Alexander Babenko", C<<foxcool@cpan.org>>
 
 =head1 BUGS
 
