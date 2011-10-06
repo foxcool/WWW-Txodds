@@ -21,7 +21,7 @@ sub new {
     bless $self, $class;
 }
 
-sub full_service_feed {
+sub odds_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/xml.php';
 
@@ -300,18 +300,177 @@ Working with http://txodds.com API.
 
 =head1 SUBROUTINES/METHODS
 
-=head2 full_service_feed
+=head2 odds_feed
+
+This method work with Standard XML Feed and Full Service Feed odds.
 
 The Full Service Feed provides the same request options as the standard feed but supports the 
 following additional options.    
+For more information see
+Standard XML Feed and Full Service Feed description
+in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
 
 Usage:    
-    my $obj = $tx->full_service_feed();
+    my $obj = $tx->odds_feed();
     or
-    my $obj = $tx->full_service_feed(%params);
+    my $obj = $tx->odds_feed(%params);
     
 %params is a HASH with API request options:
+
+=head3 Sport - Master ID Groups
+
+TXODDS provides a list of specific Master ID Groups to allow you to request just the content for
+the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 – Master ID
+group codes in PDF doc.
+
+Usage:
+    mgid => 'code1,code2,code3'
+
+Example:
+    my $obj = $tx->odds_feed(mgid => '1072');
+    or
+    my $obj = $tx->odds_feed(mgid => '1018,1022');
+
+=head3 Sport - Master ID Groups by name
+
+Usage:
+    mgstr => 'name1,name2'
+
+Example:
+    my $obj = $tx->odds_feed(mgstr => 'FB%'); 
+    # This will request all Master ID names that start with FB% (all socker)
     
+    my $obj = $tx->odds_feed(mgid => 'FBENG,FBFRA');
+    # English and France socker
+
+=head3 Sport - Bookmakers
+
+If you made the above requests you would have received all bookmakers quoted prices. For
+popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
+See books() for information about requesting bookmaker codes.
+
+Usage:
+    bid => 'code1,code2,code3'
+
+Example:
+    my $obj = $tx->odds_feed(bid => '17,42,110,126'); 
+    # Only selected bookmakers
+
+=head3 Sport - Odds type
+
+The Odds Type parameter allows you to select single or multiple odds types. For example you may
+only be interested in Asian Handicap odds for your chosen sport or league or you may wish to
+process different odds types separately to keep your program code less complex.
+See odds_types() for information about requesting offer codes.
+
+Usage:
+    ot => 'code1,code2,code3'
+
+Example:
+    my $obj = $tx->odds_feed(ot => '0,5'); 
+    # Only three way and Asian Handicap odds (0 and 5)
+
+=head3 Sport - League/Event - Minor ID Groups
+
+pgid is for selecting groups such as Premier League-06 by giving group number as a parameter.
+See groups() for information about requesting Minor ID group codes.
+
+Usage:
+    pgid => 'code1,code2,code3'
+
+Example:
+    my $obj = $tx->odds_feed(pgid => '2760,2761'); 
+    # FBENG 2006 Premier League and Coca Cola Championship
+
+=head3 Odds order
+
+The TXODDS feed allows you also to specify which order of quoted odds you require for a
+particular purpose. Please refer to the table below for a detailed explanation
+
+Usage:
+    all_odds => 'code'
+
+Codes:
+    0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
+    1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
+    2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
+    3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+
+Example:
+    my $obj = $tx->odds_feed(all_odds => 2);
+
+=head3 Timed requests
+
+When any request is made the returned XML document provides a timestamp at the top of the
+feed which shows the current TXODDS feed server time for that request.
+If you want to receive odds updates rather than refresh all the odds then you can store this value
+and use it in your next request.
+
+The timestamp is in standard Unix timestamp format
+For more information please see http://en.wikipedia.org/wiki/Unix_time
+
+Usage:
+    last => 'timestamp'
+
+Example:
+    my $obj = $tx->odds_feed(last => '1215264420');
+    # To request all changes after 1215264420 (19th May 2007 13:27:00)
+
+=head3 Active Price
+
+TXODDS selects and extracts bookmakers odds (scanning) by a variety of methods. Should the
+bookmakers website or server be unable and therefore TXODDS cannot verify that the odds are
+either the same or have changed during the current scanning process then those odds are flagged
+as inactive.
+
+The timestamp is in standard Unix timestamp format
+For more information please see http://en.wikipedia.org/wiki/Unix_time
+
+Usage:
+    active => 0 # It will return the last odds from the master database regardless of age
+    or
+    active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
+
+Example:
+    my $obj = $tx->odds_feed(active => 1);
+
+=head3 Match ID
+
+The peid option is for selecting a single match by its matchid attribute as a parameter.
+
+
+Usage:
+    peid => xxxxxxx
+
+Example:
+    my $obj = $tx->odds_feed(peid => 789701);
+
+=head3 Bet Offer ID
+
+The boid option is for selecting a single offer via the offer_id attribute as a parameter.
+
+The default odds type is ot=0 ( Match Odds ). If the bet offer is not ot=o then you will also need to add the odds
+type to the request.
+    ot => 1
+
+Usage:
+    boid => 63087469
+
+Example:
+    my $obj = $tx->odds_feed(peid => 789701);
+
+=head3 Team ID
+
+The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute
+as a parameter.
+
+Usage:
+    pid => xxxx
+
+Example:
+    my $obj = $tx->odds_feed(pid => 1592);
+    # This will return all odds for Birmingham City English Soccer team
+
 =head3 Date search
 
 The required date range to search
@@ -397,7 +556,7 @@ Example:
 
 =head3 Response
 
-full_service_feed function return a HASH object with data about matches, odds etc.
+odds_feed function return a HASH object with data about matches, odds etc.
     
     {
         'timestamp' => '1316685278',
@@ -891,10 +1050,10 @@ Usage:
 
 =head2 clean_obj
 
-Method for clean "bad" API data object, returned full_service_feed(): delete unnecessary nodes, add sport node etc.
+Method for clean "bad" API data object, returned odds_feed(): delete unnecessary nodes, add sport node etc.
 
 Usage:
-    my $BadObj = $tx->full_service_feed();
+    my $BadObj = $tx->odds_feed();
     my $GoodObj = $tx->clean_obj($BadObj);
 
 Response:
