@@ -38,6 +38,38 @@ sub odds_feed {
         ForceArray => 'bookmaker' );
 }
 
+sub results_feed {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/result/xml.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
+sub htcs_feed {
+        my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/odds/htftcrs.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
 sub sports {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/sports.php');
@@ -310,7 +342,7 @@ For more information see
 Standard XML Feed and Full Service Feed description
 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
 
-Usage:    
+Usage:
     my $obj = $tx->odds_feed();
     or
     my $obj = $tx->odds_feed(%params);
@@ -660,6 +692,113 @@ The XML document is made up of the following ten elements:
 
 Please see xml_schema function description
 
+=head2 results_feed
+
+Fixtures & Results Feed description can be read in PDF documentation
+
+Usage:
+    my $results = $tx->results_feed(%options);
+
+Options:
+
+=head3 Date search
+
+The required date range to search
+
+Usage: %options = (
+           date => 'StartDate,EndDate'
+       );
+
+Example:
+    ...
+    date => '2007-06-01,2007-06-30',
+    ...
+
+The date parameter accepts also the following values:
+    yesterday - Yesterdays results;
+    today     - Todays results;
+    tomorrow  - Tomorrows results;
+    now       - Current time + 24 hours;
+    next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
+Note: You can also do date arithmetic using the following operators: -+ day / month / year
+
+Examples:
+    date => 'today',
+    date => 'today,tomorrow +1 day',
+    date => 'now + 1 day',
+    date => 'next saturday',
+    date => '2009-3-24'
+
+=head3 Day search
+
+A simpler way to search uses the days option
+
+Usage: %options = (
+           days => number
+       );
+       
+Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
+The xml days-parameter simplifies data loading. It now accepts the following format:
+    ...
+    days => 'n,r',
+    ...
+where: n is the starting day relative to the current date and r is range (in days) so for example.
+If the r parameter is not specified it works like before.
+
+Example:
+    days => '0,1', # To return all of today’s odds
+    days => '0,2', # To return odds for the next 2 days
+    days => '1,1'  # To return tomorrow's odds
+    days => '0,-1' # To return yesterday's odds
+    days => '1'    # Today
+    days => '3'    # Next 3 days
+    days => '-1'   # Yesterday
+    days => '-3'   # Last 3 days
+    
+=head3 Sport - Master ID Groups
+
+TXODDS provides a list of specific Master ID Groups to allow you to request just the content for
+the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 – Master ID
+group codes in PDF doc.
+
+Usage:
+    mgid => 'code1,code2,code3'
+
+Example:
+    my $obj = $tx->odds_feed(mgid => '1072');
+    or
+    my $obj = $tx->odds_feed(mgid => '1018,1022');
+
+=head3 Sport - Master ID Groups by name
+
+Usage:
+    mgstr => 'name1,name2'
+
+Example:
+    my $obj = $tx->odds_feed(mgstr => 'FB%');
+    # This will request all Master ID names that start with FB% (all socker)
+    
+    my $obj = $tx->odds_feed(mgid => 'FBENG,FBFRA');
+    # English and France socker
+
+Results XML Schema Definition (XSD)
+
+An XML Schema definition is available that describes the Results XML. This can be used by various
+development tools to simplify code generation/testing/feed parsing.
+
+http://xml2.txodds.com/feed/result/result.xsd
+
+=head2 htcs_feed
+
+Half-time & Correct Score feed (more info in PDF doc)
+
+Usage:
+    my $data = $tx->htcs_feed();
+
+Requesting specific information
+
+This feed can be searched using all the same request options as per the Standard feed.
+
 =head2 xml_schema
 
 An XML Schema definition is available that describes the Odds XML. This can be used by various
@@ -761,7 +900,7 @@ Options:
         1 - soccer;
         2 - hockey;
         Please see sports() for all sport id codes;
-     boid (Bet Offer Id):
+    boid (Bet Offer Id):
         xxxxxxx - Single bet offer id;
         xxxxxxx, yyyyyyy, zzzzzzz - multiple bet offer id;
 
@@ -1119,7 +1258,7 @@ Response:
 
 =head1 AUTHOR
 
-"Alexander Babenko", C<<foxcool@cpan.org>>
+"Alexander Babenko", C<foxcool@cpan.org>
 
 =head1 BUGS
 
@@ -1132,7 +1271,7 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
-GitHub: C<<https://github.com/Foxcool/Txodds>>
+GitHub: C<https://github.com/Foxcool/Txodds>
 
 For more information about TXOdds API please see C<<http://txodds.com/v2/0/services.xml.html>>.
 
@@ -1169,7 +1308,7 @@ L<http://search.cpan.org/dist/Txodds/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 "Foxcool".
+Copyright 2011 "Alexander Babenko".
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
