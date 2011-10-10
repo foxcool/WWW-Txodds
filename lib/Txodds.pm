@@ -503,12 +503,12 @@ Usage:
     all_odds => 'code'
 
 Codes:
-= over 4
+=over 4
 =item * 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
 =item * 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
 =item * 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
 =item * 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
-= back
+=back
 
 Example:
     my $obj = $tx->odds_feed(all_odds => 2);
@@ -541,11 +541,11 @@ The timestamp is in standard Unix timestamp format
 For more information please see http://en.wikipedia.org/wiki/Unix_time
 
 Usage:
-= over 4
+=over 4
 active => 0 # It will return the last odds from the master database regardless of age
 or
 active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
-= back
+=back
 
 Example:
     my $obj = $tx->odds_feed(active => 1);
@@ -887,7 +887,7 @@ Usage:
     my $data = $tx->average_feed();
 
 Options:
-= over 4
+=over 4
 League/Event - Minor ID Groups
 The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
 
@@ -924,7 +924,7 @@ The showbookdata option can be used to stop the display of the bookmakers odds â
     # O - Suppresses the bookmakers odds from being returned;
     # 1 - Provides the bookmakers odds as normal ( default );
 
-= back
+=back
 
 =head2 antepost_feed
 
@@ -934,7 +934,7 @@ Usage:
     my $data = antepost_feed();
 
 Options:
-= over 4
+=over 4
 League/Event - Minor ID Groups
 The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
 
@@ -947,14 +947,14 @@ If you made the above requests you would have received all bookmakers quoted pri
 
 Odds order
 The Antepost feed allows you also to specify which order of quoted odds you require for a particular purpose. Please refer to the table below for a detailed explanation
-= over 4
+=over 4
 all_odds => code1,code2,code3
 # 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
 # 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
 # 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
 # 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
-= back
-= back
+=back
+=back
 
 =head2 boid_states
 
@@ -990,13 +990,13 @@ Usage:
     my $data = $tx->boid_states(last => 1235383825);
 
 Options:
-= over 4
+=over 4
 Offer last updated time ( type => 'update')
 This webservice provides details of the time when each offer was last verified as correct.
 As an example usage on the TXODDS website we have colours showing when offers where "last updated" or "verified as correct".
 
     my $data = $tx->boid_states( type => 'update', last => 1235383825 );
-= back
+=back
 
 Please note that as offers are verified every few seconds, to every few minutes depending on the bookmaker, so then there will naturally be a lot of data sent via this webservice.
 You can then use the "last_updated" time to update your database/application using the bet offer Id (boid) and the "last_updated" , "last_changed" and "flags" values as appropriate.
