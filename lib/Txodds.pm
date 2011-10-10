@@ -119,8 +119,24 @@ sub boid_states {
 }
 
 sub starting_times {
-        my ( $self, %params ) = @_;
+    my ( $self, %params ) = @_;
     my $url = 'http://txodds.com/feed/starting_times.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
+sub moves {
+    my ( $self, %params ) = @_;
+    my $url = 'http://www.txodds.com/feed/moves/xml.php';
 
     Carp::croak(
         "ident & passwd of http://txodds.com API required for this action")
@@ -984,6 +1000,18 @@ Usage:
 
 This feed can be searched using the last timestamp to get changes for example every minute.
         
+=head2 moves
+
+This web service allows you to see which odds are moving and identifies trends you may want
+to bring to the attention of your traders and/or show to your customers as an added value
+service.
+
+Usage:
+    my $data = $tx->moves();
+
+Options:
+    spid - by sport id
+        spid => 1
 
 =head2 xml_schema
 
