@@ -102,6 +102,22 @@ sub antepost_feed {
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
+sub boid_states {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/boid_states.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
 sub sports {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/sports.php');
@@ -885,7 +901,52 @@ Options:
         # 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
         # 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
         # 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
-        
+
+=head2 boid_states
+
+Tracking OTB (Off-the-board) Offers
+
+For clients who want to know each offers current validity in real time we have created a new webservice specifically for this purpose.
+
+There are two options within this webservice as follows:
+    * type=change ( default );
+    * type=update;
+
+Offer state changes ( type=change)
+
+This webservice provides details of offers ‘state changes’ i.e. an offer that currently cannot be verified is marked as ‘inactive’, and if subsequently it is re-verified it is then marked as ‘active’ again.
+The reasons for offers becoming invalid are down to 2 main reasons:
+    * the offer has been removed/taken down by the bookmaker (hence OTB);
+    * we cannot establish a connection with the bookmakers and hence cannot read the odds;
+
+Note: If all odds for a bookie are OTB, then most likely it's a connection/network problem.
+
+In the XML odds element we already have the “flags=” and “last_updated” attributes which show if the offer is active or inactive for a particular offer and the time it was last verified. However, unless all offers are refreshed then this information is soon out of date, and refreshing all the offers each time is very inefficient.
+As offers are verified frequently if we updated the offers element with this new data then you’d be getting all the data refreshed all the time, so we have built the OTB feed to provide this functionality in a much more efficient manner.
+
+Active->Inactive->Active state changes
+
+With this feed we you can monitor any offers that go from active->inactive and then inactive->active
+The first request always returns just the header, and the timestamp.
+Use the timestamp on your next request, in the same way as you would for odds updates.
+You should check that the offer id exists in your database or application, and then updates it accordingly with the new “last_updated” and “flags” values.
+Your database or application will now be fully up to date with which offers are verified as currently valid, so you can be assured that your applications and/or traders can use them wioth confidence.
+
+Usage:
+    my $data = $tx->boid_states(last => 1235383825);
+
+Options:
+    Offer last updated time ( type => 'update')
+    This webservice provides details of the time when each offer was last verified as correct.
+    As an example usage on the TXODDS website we have colours showing when offers where “last updated” or “verified as correct”.
+        my $data = $tx->boid_states( type => 'update', last => 1235383825 );
+
+Please note that as offers are verified every few seconds, to every few minutes depending on the bookmaker, so then there will naturally be a lot of data sent via this webservice.
+You can then use the “last_updated” time to update your database/application using the bet offer Id (boid) and the “last_updated” , “last_changed” and “flags” values as appropriate.
+Your database or application will now be fully up to date with the last time offers have been verified, or changed as currently valid, so you can be assured that your applications and/or traders can use them with confidence.
+
+See the Tracking OTB (Off-the-board) Offers description in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>)
+
 =head2 xml_schema
 
 An XML Schema definition is available that describes the Odds XML. This can be used by various
