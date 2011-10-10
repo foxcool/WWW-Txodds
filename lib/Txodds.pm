@@ -86,6 +86,22 @@ sub average_feed {
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
+sub antepost_feed {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/odds/ap.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
 sub sports {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/sports.php');
@@ -848,6 +864,28 @@ Options:
         # O - Suppresses the bookmakers odds from being returned;
         # 1 - Provides the bookmakers odds as normal ( default );
 
+=head2 antepost_feed
+
+A separate webservice provides outright lines for major Soccer leagues and events.
+
+Usage:
+    my $data = antepost_feed();
+
+Options:
+    League/Event - Minor ID Groups
+    The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
+        pgid => 'code1,code2,code3'
+    Bookmakers
+    If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
+        bid => 'code1,code2,code3'
+    Odds order
+    The Antepost feed allows you also to specify which order of quoted odds you require for a particular purpose. Please refer to the table below for a detailed explanation
+        all_odds => code1,code2,code3
+        # 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
+        # 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
+        # 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
+        # 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+        
 =head2 xml_schema
 
 An XML Schema definition is available that describes the Odds XML. This can be used by various
@@ -915,7 +953,7 @@ Response:
     };
 
 Options:
-    any option (see example) will return full response
+    any option will return full response
     
 Example:
     my %types = $tx->odds_types('full');
