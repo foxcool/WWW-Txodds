@@ -420,7 +420,7 @@ The Full Service Feed provides the same request options as the standard feed but
 following additional options.    
 For more information see
 Standard XML Feed and Full Service Feed description
-in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $obj = $tx->odds_feed();
@@ -503,10 +503,12 @@ Usage:
     all_odds => 'code'
 
 Codes:
-    0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
-    1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
-    2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
-    3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+= over 4
+=item * 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
+=item * 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
+=item * 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
+=item * 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+= back
 
 Example:
     my $obj = $tx->odds_feed(all_odds => 2);
@@ -539,9 +541,11 @@ The timestamp is in standard Unix timestamp format
 For more information please see http://en.wikipedia.org/wiki/Unix_time
 
 Usage:
-    active => 0 # It will return the last odds from the master database regardless of age
-    or
-    active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
+= over 4
+active => 0 # It will return the last odds from the master database regardless of age
+or
+active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
+= back
 
 Example:
     my $obj = $tx->odds_feed(active => 1);
@@ -573,8 +577,7 @@ Example:
 
 =head3 Team ID
 
-The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute
-as a parameter.
+The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute as a parameter.
 
 Usage:
     pid => xxxx
@@ -602,6 +605,7 @@ The date parameter accepts also the following values:
     tomorrow  - Tomorrows results;
     now       - Current time + 24 hours;
     next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
+
 Note: You can also do date arithmetic using the following operators: -+ day / month / year
 
 Examples:
@@ -615,15 +619,13 @@ Examples:
 
 A simpler way to search uses the days option
 
-Usage: %options = (
-           days => number
-       );
+    days => number
        
 Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
 The xml days-parameter simplifies data loading. It now accepts the following format:
-    ...
+
     days => 'n,r',
-    ...
+
 where: n is the starting day relative to the current date and r is range (in days) so for example.
 If the r parameter is not specified it works like before.
 
@@ -644,9 +646,8 @@ To get all matches/odds for any given time range by using the date parameter. Fo
 returns all soccer fixtures for the next 24 hours:
 
 Example:
-    ...
+
     date => 'now,now+24hour',
-    ...
         
 =head3 Fixtures & results
 
@@ -662,9 +663,8 @@ Codes:
     1 - RESULT (To request RESULTS only).
 
 Example: 
-    %options = (
-         result => 0
-     );
+
+    result => 0
 
 =head3 Response
 
@@ -800,6 +800,7 @@ The date parameter accepts also the following values:
     tomorrow  - Tomorrows results;
     now       - Current time + 24 hours;
     next xxx  - Specific day i.e. where xxx is day e.g. Tuesday, Wednesday, etc.
+
 Note: You can also do date arithmetic using the following operators: -+ day / month / year
 
 Examples:
@@ -813,15 +814,14 @@ Examples:
 
 A simpler way to search uses the days option
 
-Usage: %options = (
-           days => number
-       );
+Usage:
+    days => number
        
 Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
 The xml days-parameter simplifies data loading. It now accepts the following format:
-    ...
+
     days => 'n,r',
-    ...
+
 where: n is the starting day relative to the current date and r is range (in days) so for example.
 If the r parameter is not specified it works like before.
 
@@ -838,7 +838,7 @@ Example:
 =head3 Sport - Master ID Groups
 
 TXODDS provides a list of specific Master ID Groups to allow you to request just the content for
-the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 – Master ID
+the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 - Master ID
 group codes in PDF doc.
 
 Usage:
@@ -881,36 +881,50 @@ This feed can be searched using all the same request options as per the Standard
 
 =head2 average_feed
 
-See the Average feed description in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+See the Average feed description in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $data = $tx->average_feed();
 
 Options:
-    League/Event - Minor ID Groups
-    The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
-        pgid => 'code1,code2,code3'
-    Bookmakers
-    If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
-        bid => 'code1,code2,code3'
-    Match ID
-    The peid option is for selecting a single match by its matchid attribute as a parameter.
-        peid => xxxx
-    Team ID
-    The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute as a parameter.
-        pid => xxxxxxx
-    Average type
-    The how option returns one of two averages.
-    The default ( how=0 ) returns the current average as calculated based on all bookmakers ( or selected bookmakers )
-    The default ( how=1 ) returns the initial average and can be used to compare with the current average to see how prices have changed over time.
-        how => code
-        # O - Provides the current average price ( default );
-        # 1 - Provides the initial average price;
-    Show bookmakers odds
-    The showbookdata option can be used to stop the display of the bookmakers odds ‘expectations’ element. If you simply want the averages and don’t want all the bookmakers odds then use this option for greater efficiency.
-        showbookdata => code
-        # O - Suppresses the bookmakers odds from being returned;
-        # 1 - Provides the bookmakers odds as normal ( default );
+= over 4
+League/Event - Minor ID Groups
+The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
+
+    pgid => 'code1,code2,code3'
+
+Bookmakers
+If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
+
+    bid => 'code1,code2,code3'
+
+Match ID
+The peid option is for selecting a single match by its matchid attribute as a parameter.
+
+    peid => xxxx
+
+Team ID
+The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute as a parameter.
+
+    pid => xxxxxxx
+
+Average type
+The how option returns one of two averages.
+The default ( how=0 ) returns the current average as calculated based on all bookmakers ( or selected bookmakers )
+The default ( how=1 ) returns the initial average and can be used to compare with the current average to see how prices have changed over time.
+
+    how => code
+    # O - Provides the current average price ( default );
+    # 1 - Provides the initial average price;
+
+Show bookmakers odds
+The showbookdata option can be used to stop the display of the bookmakers odds ‘expectations’ element. If you simply want the averages and don’t want all the bookmakers odds then use this option for greater efficiency.
+
+    showbookdata => code
+    # O - Suppresses the bookmakers odds from being returned;
+    # 1 - Provides the bookmakers odds as normal ( default );
+
+= back
 
 =head2 antepost_feed
 
@@ -920,19 +934,27 @@ Usage:
     my $data = antepost_feed();
 
 Options:
-    League/Event - Minor ID Groups
-    The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
-        pgid => 'code1,code2,code3'
-    Bookmakers
-    If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
-        bid => 'code1,code2,code3'
-    Odds order
-    The Antepost feed allows you also to specify which order of quoted odds you require for a particular purpose. Please refer to the table below for a detailed explanation
-        all_odds => code1,code2,code3
-        # 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
-        # 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
-        # 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
-        # 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+= over 4
+League/Event - Minor ID Groups
+The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
+
+    pgid => 'code1,code2,code3'
+
+Bookmakers
+If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
+
+    bid => 'code1,code2,code3'
+
+Odds order
+The Antepost feed allows you also to specify which order of quoted odds you require for a particular purpose. Please refer to the table below for a detailed explanation
+= over 4
+all_odds => code1,code2,code3
+# 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
+# 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
+# 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
+# 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
+= back
+= back
 
 =head2 boid_states
 
@@ -953,7 +975,7 @@ The reasons for offers becoming invalid are down to 2 main reasons:
 
 Note: If all odds for a bookie are OTB, then most likely it's a connection/network problem.
 
-In the XML odds element we already have the “flags=” and “last_updated” attributes which show if the offer is active or inactive for a particular offer and the time it was last verified. However, unless all offers are refreshed then this information is soon out of date, and refreshing all the offers each time is very inefficient.
+In the XML odds element we already have the "flags=" and "last_updated" attributes which show if the offer is active or inactive for a particular offer and the time it was last verified. However, unless all offers are refreshed then this information is soon out of date, and refreshing all the offers each time is very inefficient.
 As offers are verified frequently if we updated the offers element with this new data then you’d be getting all the data refreshed all the time, so we have built the OTB feed to provide this functionality in a much more efficient manner.
 
 Active->Inactive->Active state changes
@@ -961,23 +983,26 @@ Active->Inactive->Active state changes
 With this feed we you can monitor any offers that go from active->inactive and then inactive->active
 The first request always returns just the header, and the timestamp.
 Use the timestamp on your next request, in the same way as you would for odds updates.
-You should check that the offer id exists in your database or application, and then updates it accordingly with the new “last_updated” and “flags” values.
+You should check that the offer id exists in your database or application, and then updates it accordingly with the new "last_updated" and "flags" values.
 Your database or application will now be fully up to date with which offers are verified as currently valid, so you can be assured that your applications and/or traders can use them wioth confidence.
 
 Usage:
     my $data = $tx->boid_states(last => 1235383825);
 
 Options:
-    Offer last updated time ( type => 'update')
-    This webservice provides details of the time when each offer was last verified as correct.
-    As an example usage on the TXODDS website we have colours showing when offers where “last updated” or “verified as correct”.
-        my $data = $tx->boid_states( type => 'update', last => 1235383825 );
+= over 4
+Offer last updated time ( type => 'update')
+This webservice provides details of the time when each offer was last verified as correct.
+As an example usage on the TXODDS website we have colours showing when offers where "last updated" or "verified as correct".
+
+    my $data = $tx->boid_states( type => 'update', last => 1235383825 );
+= back
 
 Please note that as offers are verified every few seconds, to every few minutes depending on the bookmaker, so then there will naturally be a lot of data sent via this webservice.
-You can then use the “last_updated” time to update your database/application using the bet offer Id (boid) and the “last_updated” , “last_changed” and “flags” values as appropriate.
+You can then use the "last_updated" time to update your database/application using the bet offer Id (boid) and the "last_updated" , "last_changed" and "flags" values as appropriate.
 Your database or application will now be fully up to date with the last time offers have been verified, or changed as currently valid, so you can be assured that your applications and/or traders can use them with confidence.
 
-See the Tracking OTB (Off-the-board) Offers description in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>)
+See the Tracking OTB (Off-the-board) Offers description in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>)
 
 =head2 starting_times
 
@@ -1064,7 +1089,7 @@ Example:
 =head2 odds_types
 
 This method return all odds types. For more information see
-Appendix 13 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+Appendix 13 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my %types = $tx->odds_types();
@@ -1099,7 +1124,7 @@ Response:
 =head2 offer_amounts
 
 This servise is resersed for including exchange matched amounts for standard odds. For more information see
-Appendix 12 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+Appendix 12 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my %oa = $tx->offer_amounts(date => '2011-04-02');
@@ -1127,7 +1152,7 @@ Response:
 =head2 ap_offer_amounts
 
 Antepost Exchange Mathed Amounts Servise. This servise is resersed for including exchange matched amounts.
-For more information see Appendix 11 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+For more information see Appendix 11 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $oa = $tx->ap_offer_amounts();
@@ -1189,7 +1214,7 @@ Response:
 
 Competitors webservice
 This webservice provides a comprehensive list of team and players names used by the feed.
-For more information see Appendix 6 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+For more information see Appendix 6 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $competitors = $tx->competitors();
@@ -1221,7 +1246,7 @@ When a match is longer ‘valid’ its id is available on this webservice.
 For example when a match has finished then it may need to be removed from any monitoring
 application or database.
 
-For more information see Appendix 5 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+For more information see Appendix 5 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $peids = $tx->deleted_peids();
@@ -1252,7 +1277,7 @@ When an extraction or verification of odds fails the unique odds id is available
 For example if a bookmaker takes down their website for maintenance their odds are no longer
 valid they may need to be removed from any monitoring application or database.
 
-For more information see Appendix 4 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+For more information see Appendix 4 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
     my $boids = $tx->deleted_boids();
@@ -1279,7 +1304,7 @@ Response:
 
 =head2 groups 
 
-This method request league or event names. See Appendix 3 in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>) for more info.
+This method request league or event names. See Appendix 3 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>) for more info.
 
 Usage:
     my $groups = $tx->groups();
@@ -1348,7 +1373,7 @@ Response:
 
 =head2 books
 
-Bookmaker codes. More info in Appendix 3 of PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>.
+Bookmaker codes. More info in Appendix 3 of PDF documentation (C<http://txodds.com/v2/0/services.xml.html>.
 
 Usage:
     my $bookmakers = $tx->books();
@@ -1487,7 +1512,7 @@ automatically be notified of progress on your bug as I make changes.
 
 GitHub: C<https://github.com/Foxcool/Txodds>
 
-For more information about TXOdds API please see C<<http://txodds.com/v2/0/services.xml.html>>.
+For more information about TXOdds API please see C<http://txodds.com/v2/0/services.xml.html>.
 
 You can find documentation for this module with the perldoc command.
 
