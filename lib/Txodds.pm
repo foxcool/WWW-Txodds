@@ -55,8 +55,24 @@ sub results_feed {
 }
 
 sub htcs_feed {
-        my ( $self, %params ) = @_;
+    my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/htftcrs.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
+sub average_feed {
+    my ( $self, %params ) = @_;
+    my $url = 'http://xml2.txodds.com/feed/average/xml.php';
 
     Carp::croak(
         "ident & passwd of http://txodds.com API required for this action")
@@ -798,6 +814,39 @@ Usage:
 Requesting specific information
 
 This feed can be searched using all the same request options as per the Standard feed.
+
+=head2 average_feed
+
+See the Average feed description in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>).
+
+Usage:
+    my $data = $tx->average_feed();
+
+Options:
+    League/Event - Minor ID Groups
+    The pgid is for selecting different groups such as Champions League -07 by giving the group number as a parameter.
+        pgid => 'code1,code2,code3'
+    Bookmakers
+    If you made the above requests you would have received all bookmakers quoted prices. For popular events there can be well over a hundred bookmaker odds on the TXODDS XML Feed.
+        bid => 'code1,code2,code3'
+    Match ID
+    The peid option is for selecting a single match by its matchid attribute as a parameter.
+        peid => xxxx
+    Team ID
+    The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute as a parameter.
+        pid => xxxxxxx
+    Average type
+    The how option returns one of two averages.
+    The default ( how=0 ) returns the current average as calculated based on all bookmakers ( or selected bookmakers )
+    The default ( how=1 ) returns the initial average and can be used to compare with the current average to see how prices have changed over time.
+        how => code
+        # O - Provides the current average price ( default );
+        # 1 - Provides the initial average price;
+    Show bookmakers odds
+    The showbookdata option can be used to stop the display of the bookmakers odds ‘expectations’ element. If you simply want the averages and don’t want all the bookmakers odds then use this option for greater efficiency.
+        showbookdata => code
+        # O - Suppresses the bookmakers odds from being returned;
+        # 1 - Provides the bookmakers odds as normal ( default );
 
 =head2 xml_schema
 
