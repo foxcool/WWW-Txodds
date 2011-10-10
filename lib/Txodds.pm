@@ -118,6 +118,22 @@ sub boid_states {
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
+sub starting_times {
+        my ( $self, %params ) = @_;
+    my $url = 'http://txodds.com/feed/starting_times.php';
+
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+
+    %params = (
+        ident  => $self->{ident},
+        passwd => $self->{passwd}
+    );
+
+    return $self->parse_xml( $self->get( $url, \%params ) );
+}
+
 sub sports {
     my $self    = shift;
     my $content = $self->get('http://xml2.txodds.com/feed/sports.php');
@@ -946,6 +962,28 @@ You can then use the “last_updated” time to update your database/application
 Your database or application will now be fully up to date with the last time offers have been verified, or changed as currently valid, so you can be assured that your applications and/or traders can use them with confidence.
 
 See the Tracking OTB (Off-the-board) Offers description in PDF documentation (C<<http://txodds.com/v2/0/services.xml.html>>)
+
+=head2 starting_times
+
+Bookmakers Starting Times
+
+This webservice provides details of the starting times of events as posted by individual online
+bookmakers. It is very common for conflicting data to be posted by bookmakers in relation to the
+starting time of events, therefore this service was created to allow customers to find make informed
+choices when selecting the time they use for their own purposes.
+
+If the request returns no data (i.e. no updates have been received) or it is invalid for some reason you will still
+receive an XML document with valid XML Declaration and matches container as above but it will of course not
+contain any data.
+
+It is also a good idea to provide XML document verification in your processing code to ensure that the entire
+document has arrived successfully and is not malformed due to any transmission errors.
+
+Usage:
+    my $data = $tx->starting_times();
+
+This feed can be searched using the last timestamp to get changes for example every minute.
+        
 
 =head2 xml_schema
 
