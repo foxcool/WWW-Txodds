@@ -24,16 +24,7 @@ sub new {
 sub odds_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/xml.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ),
         ForceArray => 'bookmaker' );
 }
@@ -41,112 +32,49 @@ sub odds_feed {
 sub results_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/result/xml.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub htcs_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/htftcrs.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub average_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/average/xml.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub antepost_feed {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/odds/ap.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub boid_states {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/boid_states.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub starting_times {
     my ( $self, %params ) = @_;
     my $url = 'http://txodds.com/feed/starting_times.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub moves {
     my ( $self, %params ) = @_;
     my $url = 'http://www.txodds.com/feed/moves/xml.php';
-
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
-
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
@@ -215,14 +143,7 @@ sub ap_offer_amounts {
 sub deleted_ap_offers {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/deleted_ap_offers.php';
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
@@ -236,14 +157,7 @@ sub countries {
 sub competitors {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/competitors.php';
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ),
         ValueAttr => ['competitor'] );
 }
@@ -251,34 +165,21 @@ sub competitors {
 sub deleted_peids {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/deleted_peids.php';
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub deleted_boids {
     my ( $self, %params ) = @_;
     my $url = 'http://xml2.txodds.com/feed/deleted_boids.php';
-    Carp::croak(
-        "ident & passwd of http://txodds.com API required for this action")
-      unless ( $self->{ident} && $self->{passwd} );
-
-    %params = (
-        ident  => $self->{ident},
-        passwd => $self->{passwd}
-    );
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
     return $self->parse_xml( $self->get( $url, \%params ) );
 }
 
 sub groups {
     my ( $self, %params ) = @_;
-    my $content = $self->get( 'http://xml2.txodds.com/feed/groups.php', \%params );
+    my $content =
+      $self->get( 'http://xml2.txodds.com/feed/groups.php', \%params );
     my $data = $self->parse_xml( $content, ValueAttr => ['group'] );
 
     return $data;
@@ -286,11 +187,12 @@ sub groups {
 
 sub books {
     my ( $self, %params ) = @_;
-    my $content = $self->get( 'http://xml2.txodds.com/feed/books.php', \%params );
+    my $content =
+      $self->get( 'http://xml2.txodds.com/feed/books.php', \%params );
     my $data = $self->parse_xml( $content, ValueAttr => ['bookmaker'] );
 
     return $data;
-} 
+}
 
 sub xml_schema {
     my $self    = shift;
@@ -330,6 +232,14 @@ sub parse_xml {
     Carp::croak( "Wrong responce: " . $xml_string ) unless $obj;
 
     return $obj;
+}
+
+sub get_ident_passwd {
+    my $self = shift;
+    Carp::croak(
+        "ident & passwd of http://txodds.com API required for this action")
+      unless ( $self->{ident} && $self->{passwd} );
+    return $self->{ident}, $self->{passwd};
 }
 
 sub clean_obj {
@@ -502,7 +412,7 @@ Usage:
 
 Codes:
 
-=over 8
+=over 4
 
 =item 0
 
