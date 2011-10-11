@@ -1,7 +1,7 @@
 .project
 Changes
 ignore.txt
-lib/Txodds.pm
+lib/WWW/Txodds.pm
 Makefile.PL
 MANIFEST
 README
