@@ -1446,10 +1446,6 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
-GitHub: C<https://github.com/Foxcool/Txodds>
-
-For more information about TXOdds API please see C<http://txodds.com/v2/0/services.xml.html>.
-
 You can find documentation for this module with the perldoc command.
 
     perldoc Txodds
@@ -1458,6 +1454,14 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * GitHub:
+
+L<https://github.com/Foxcool/Txodds>
+
+=item * API documentation PDF:
+
+L<http://txodds.com/v2/0/services.xml.html>
 
 =item * RT: CPAN's request tracker (report bugs here)
 
