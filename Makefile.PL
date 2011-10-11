@@ -4,10 +4,10 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Txodds',
+    NAME                => 'WWW::Txodds',
     AUTHOR              => q{"Foxcool" <"">},
-    VERSION_FROM        => 'lib/Txodds.pm',
-    ABSTRACT_FROM       => 'lib/Txodds.pm',
+    VERSION_FROM        => 'lib/WWW/Txodds.pm',
+    ABSTRACT_FROM       => 'lib/WWW/Txodds.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),

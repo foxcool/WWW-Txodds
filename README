@@ -1,4 +1,4 @@
-Txodds
+WWW::Txodds
 
 This module working with TXOdds.com API interface and retrive odds data.
 
@@ -17,7 +17,7 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc Txodds
+    perldoc WWW::Txodds
 
 You can also look for information at:
 
@@ -28,16 +28,16 @@ You can also look for information at:
         http://txodds.com/v2/0/services.xml.html
 
     RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Txodds
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW::Txodds
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Txodds
+        http://annocpan.org/dist/WWW::Txodds
 
     CPAN Ratings
-        http://cpanratings.perl.org/d/Txodds
+        http://cpanratings.perl.org/d/WWW::Txodds
 
     Search CPAN
-        http://search.cpan.org/dist/Txodds/
+        http://search.cpan.org/dist/WWW::Txodds/
 
 
 LICENSE AND COPYRIGHT

@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 
 use Test::More tests => 3;
-use Txodds;
+use WWW::Txodds;
 
-my $tx = Txodds->new();
+my $tx = WWW::Txodds->new();
 
 note 'Action parse_xml';
 
