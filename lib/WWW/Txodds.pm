@@ -1511,12 +1511,14 @@ Response:
 
 =head1 AUTHOR
 
-"Alexander Babenko", C<foxcool@cpan.org>
+"Alexander Babenko"
+C<foxcool@cpan.org>
+L<http://foxcool.ru>
 
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-txodds at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Txodds>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW::Txodds>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -1535,7 +1537,7 @@ You can also look for information at:
 
 =item * GitHub:
 
-L<https://github.com/Foxcool/Txodds>
+L<https://github.com/Foxcool/WWW-Txodds>
 
 =item * API documentation PDF:
 
