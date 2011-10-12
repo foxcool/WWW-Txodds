@@ -331,6 +331,7 @@ Standard XML Feed and Full Service Feed description
 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $obj = $tx->odds_feed();
     or
     my $obj = $tx->odds_feed(%params);
@@ -344,9 +345,11 @@ the sport and country that you require. For a full list of codes please see mgro
 group codes in PDF doc.
 
 Usage:
+
     mgid => 'code1,code2,code3'
 
 Example:
+
     my $obj = $tx->odds_feed(mgid => '1072');
     or
     my $obj = $tx->odds_feed(mgid => '1018,1022');
@@ -354,9 +357,11 @@ Example:
 =head3 Sport - Master ID Groups by name
 
 Usage:
+
     mgstr => 'name1,name2'
 
 Example:
+
     my $obj = $tx->odds_feed(mgstr => 'FB%'); 
     # This will request all Master ID names that start with FB% (all socker)
     
@@ -370,9 +375,11 @@ popular events there can be well over a hundred bookmaker odds on the TXODDS XML
 See books() for information about requesting bookmaker codes.
 
 Usage:
+
     bid => 'code1,code2,code3'
 
 Example:
+
     my $obj = $tx->odds_feed(bid => '17,42,110,126'); 
     # Only selected bookmakers
 
@@ -384,9 +391,11 @@ process different odds types separately to keep your program code less complex.
 See odds_types() for information about requesting offer codes.
 
 Usage:
+
     ot => 'code1,code2,code3'
 
 Example:
+
     my $obj = $tx->odds_feed(ot => '0,5'); 
     # Only three way and Asian Handicap odds (0 and 5)
 
@@ -396,9 +405,11 @@ pgid is for selecting groups such as Premier League-06 by giving group number as
 See groups() for information about requesting Minor ID group codes.
 
 Usage:
+
     pgid => 'code1,code2,code3'
 
 Example:
+
     my $obj = $tx->odds_feed(pgid => '2760,2761'); 
     # FBENG 2006 Premier League and Coca Cola Championship
 
@@ -408,6 +419,7 @@ The TXODDS feed allows you also to specify which order of quoted odds you requir
 particular purpose. Please refer to the table below for a detailed explanation
 
 Usage:
+
     all_odds => 'code'
 
 Codes:
@@ -433,6 +445,7 @@ Codes:
 =back
 
 Example:
+
     my $obj = $tx->odds_feed(all_odds => 2);
 
 =head3 Timed requests
@@ -446,9 +459,11 @@ The timestamp is in standard Unix timestamp format
 For more information please see http://en.wikipedia.org/wiki/Unix_time
 
 Usage:
+
     last => 'timestamp'
 
 Example:
+
     my $obj = $tx->odds_feed(last => '1215264420');
     # To request all changes after 1215264420 (19th May 2007 13:27:00)
 
@@ -464,26 +479,24 @@ For more information please see http://en.wikipedia.org/wiki/Unix_time
 
 Usage:
 
-=over 4
-
 active => 0 # It will return the last odds from the master database regardless of age
-or
+#or
 active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
 
-=back
-
 Example:
+
     my $obj = $tx->odds_feed(active => 1);
 
 =head3 Match ID
 
 The peid option is for selecting a single match by its matchid attribute as a parameter.
 
-
 Usage:
+
     peid => xxxxxxx
 
 Example:
+
     my $obj = $tx->odds_feed(peid => 789701);
 
 =head3 Bet Offer ID
@@ -492,12 +505,15 @@ The boid option is for selecting a single offer via the offer_id attribute as a 
 
 The default odds type is ot=0 ( Match Odds ). If the bet offer is not ot=o then you will also need to add the odds
 type to the request.
+
     ot => 1
 
 Usage:
+
     boid => 63087469
 
 Example:
+
     my $obj = $tx->odds_feed(peid => 789701);
 
 =head3 Team ID
@@ -505,9 +521,11 @@ Example:
 The pid option is for selecting a single teams odds using the team id ( hteam or ateam id) attribute as a parameter.
 
 Usage:
+
     pid => xxxx
 
 Example:
+
     my $obj = $tx->odds_feed(pid => 1592);
     # This will return all odds for Birmingham City English Soccer team
 
@@ -515,14 +533,15 @@ Example:
 
 The required date range to search
 
-Usage: %options = (
-           date => 'StartDate,EndDate'
-       );
+Usage:
+
+    %options = (
+        date => 'StartDate,EndDate'
+    );
 
 Example:
-    ...
+
     date => '2007-06-01,2007-06-30',
-    ...
 
 The date parameter accepts also the following values:
     yesterday - Yesterdays results;
@@ -534,6 +553,7 @@ The date parameter accepts also the following values:
 Note: You can also do date arithmetic using the following operators: -+ day / month / year
 
 Examples:
+
     date => 'today',
     date => 'today,tomorrow +1 day',
     date => 'now + 1 day',
@@ -555,6 +575,7 @@ where: n is the starting day relative to the current date and r is range (in day
 If the r parameter is not specified it works like before.
 
 Example:
+
     days => '0,1', # To return all of today’s odds
     days => '0,2', # To return odds for the next 2 days
     days => '1,1'  # To return tomorrow's odds
@@ -579,11 +600,13 @@ Example:
 To choose between fixtures or final results you can use the result option
     
 Usage: 
+
     %options = (
            result => code
     );
 
 Codes:
+
     0 - FIXTURE (To request FIXTURES only);
     1 - RESULT (To request RESULTS only).
 
@@ -702,6 +725,7 @@ Please see xml_schema function description
 Fixtures & Results Feed description can be read in PDF documentation
 
 Usage:
+
     my $results = $tx->results_feed(%options);
 
 Options:
@@ -710,14 +734,15 @@ Options:
 
 The required date range to search
 
-Usage: %options = (
-           date => 'StartDate,EndDate'
-       );
+Usage: 
+    
+    %options = (
+        date => 'StartDate,EndDate'
+    );
 
 Example:
-    ...
+
     date => '2007-06-01,2007-06-30',
-    ...
 
 The date parameter accepts also the following values:
     yesterday - Yesterdays results;
@@ -729,6 +754,7 @@ The date parameter accepts also the following values:
 Note: You can also do date arithmetic using the following operators: -+ day / month / year
 
 Examples:
+
     date => 'today',
     date => 'today,tomorrow +1 day',
     date => 'now + 1 day',
@@ -740,6 +766,7 @@ Examples:
 A simpler way to search uses the days option
 
 Usage:
+
     days => number
        
 Use the &days= feature to separate full odds loads easily (and therefore cutting down on file sizes).
@@ -751,6 +778,7 @@ where: n is the starting day relative to the current date and r is range (in day
 If the r parameter is not specified it works like before.
 
 Example:
+
     days => '0,1', # To return all of today’s odds
     days => '0,2', # To return odds for the next 2 days
     days => '1,1'  # To return tomorrow's odds
@@ -767,9 +795,11 @@ the sport and country that you require. For a full list of codes please see mgro
 group codes in PDF doc.
 
 Usage:
+
     mgid => 'code1,code2,code3'
 
 Example:
+
     my $obj = $tx->odds_feed(mgid => '1072');
     or
     my $obj = $tx->odds_feed(mgid => '1018,1022');
@@ -777,9 +807,11 @@ Example:
 =head3 Sport - Master ID Groups by name
 
 Usage:
+
     mgstr => 'name1,name2'
 
 Example:
+
     my $obj = $tx->odds_feed(mgstr => 'FB%');
     # This will request all Master ID names that start with FB% (all socker)
     
@@ -798,6 +830,7 @@ http://xml2.txodds.com/feed/result/result.xsd
 Half-time & Correct Score feed (more info in PDF doc)
 
 Usage:
+
     my $data = $tx->htcs_feed();
 
 Requesting specific information
@@ -809,6 +842,7 @@ This feed can be searched using all the same request options as per the Standard
 See the Average feed description in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $data = $tx->average_feed();
 
 Options:
@@ -858,6 +892,7 @@ The showbookdata option can be used to stop the display of the bookmakers odds �
 A separate webservice provides outright lines for major Soccer leagues and events.
 
 Usage:
+
     my $data = antepost_feed();
 
 Options:
@@ -877,15 +912,11 @@ If you made the above requests you would have received all bookmakers quoted pri
 Odds order
 The Antepost feed allows you also to specify which order of quoted odds you require for a particular purpose. Please refer to the table below for a detailed explanation
 
-=over 4
-
-all_odds => code1,code2,code3
-# 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
-# 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
-# 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
-# 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
-
-=back
+    all_odds => code1,code2,code3
+    # 0 - (first/last) You will receive both the first odds (oldest) and last odds ( youngest or most recent) quoted by the bookmaker(s);
+    # 1 - (all) You will receive all odds quoted from the first odds (oldest) to the last odds (most recent) quoted by the bookmaker(s);
+    # 2 - (last) You will receive the last odds ( youngest or most recent) quoted by the bookmaker(s);
+    # 3 - (first) You will receive the first odds (oldest) quoted by the bookmaker(s);
 
 =back
 
@@ -896,6 +927,7 @@ Tracking OTB (Off-the-board) Offers
 For clients who want to know each offers current validity in real time we have created a new webservice specifically for this purpose.
 
 There are two options within this webservice as follows:
+
     * type=change ( default );
     * type=update;
 
@@ -903,6 +935,7 @@ Offer state changes ( type=change)
 
 This webservice provides details of offers ‘state changes’ i.e. an offer that currently cannot be verified is marked as ‘inactive’, and if subsequently it is re-verified it is then marked as ‘active’ again.
 The reasons for offers becoming invalid are down to 2 main reasons:
+
     * the offer has been removed/taken down by the bookmaker (hence OTB);
     * we cannot establish a connection with the bookmakers and hence cannot read the odds;
 
@@ -920,6 +953,7 @@ You should check that the offer id exists in your database or application, and t
 Your database or application will now be fully up to date with which offers are verified as currently valid, so you can be assured that your applications and/or traders can use them wioth confidence.
 
 Usage:
+
     my $data = $tx->boid_states(last => 1235383825);
 
 Options:
@@ -957,6 +991,7 @@ It is also a good idea to provide XML document verification in your processing c
 document has arrived successfully and is not malformed due to any transmission errors.
 
 Usage:
+
     my $data = $tx->starting_times();
 
 This feed can be searched using the last timestamp to get changes for example every minute.
@@ -968,9 +1003,11 @@ to bring to the attention of your traders and/or show to your customers as an ad
 service.
 
 Usage:
+
     my $data = $tx->moves();
 
 Options:
+
     spid - by sport id
         spid => 1
 
@@ -980,9 +1017,11 @@ An XML Schema definition is available that describes the Odds XML. This can be u
 development tools to simplify code generation/testing/feed parsing.
 
 Usage:
+
     my $schema = $tx->xml_schema();
 
-Response:    
+Response:
+
     This function returns XML Schema from http://xml2.txodds.com/feed/odds/odds.xsd.
 
 =head2 sports
@@ -990,9 +1029,11 @@ Response:
 This service provides a complete list of sports used within the feeds.
 
 Usage:
+
     my %sports = $tx->sports();
 
 Response:
+
     {
         sportid => 'sport name',
         ...
@@ -1002,20 +1043,24 @@ Response:
     
 This method request all master groups from http://xml2.txodds.com/feed/mgroups.php.
  
-Usage:   
+Usage:
+
     my %mgroups = $tx->mgroups();
 
 Response:
+
     {
         name => 'sportid',
         ...
     }   
 
 Options:
+
     active - (boolean) request only active master groups;
     spid - select by spid (sport identifier).
 
 Example:
+
     my %mgroups = $tx->mgroups(
         active => 1,
         spid   => 1
@@ -1028,9 +1073,11 @@ This method return all odds types. For more information see
 Appendix 13 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my %types = $tx->odds_types();
 
 Response:
+
     {
         '1' => 'money line',
         '0' => 'three way',
@@ -1041,13 +1088,16 @@ Response:
     };
 
 Options:
+
     any option will return full response
     
 Example:
+
     my %types = $tx->odds_types('full');
     #return full response
 
 Response:
+
     [
         {
             'sname' => '1x2',
@@ -1063,9 +1113,11 @@ This servise is resersed for including exchange matched amounts for standard odd
 Appendix 12 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my %oa = $tx->offer_amounts(date => '2011-04-02');
 
 Options:
+
     date:
         YYYY-MM-DD            - For a cpecific date;
         YYY-MM-DD, YYYY-MM-DD - For a cpecific date range;
@@ -1080,6 +1132,7 @@ Options:
         xxxxxxx, yyyyyyy, zzzzzzz - multiple bet offer id;
 
 Response:
+
     {
         %boid% => %amount%,
         ...
@@ -1091,9 +1144,11 @@ Antepost Exchange Mathed Amounts Servise. This servise is resersed for including
 For more information see Appendix 11 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $oa = $tx->ap_offer_amounts();
 
 Response:
+
     [
         {
             'amount' => %amount%,
@@ -1103,13 +1158,14 @@ Response:
         ...
     ]
     
-    or
+    #or
     
     {
         'amount' => %amount%,
         'bid'    => %BookmakerId%,
         'pgid'   => %pgid%
     }
+    
     if amount is single.
     
     %amount% - monetary value of amounts of matched bets on exchanges;
@@ -1123,11 +1179,8 @@ An offer refers to market/bookie/team combination.
 When an offer for team is no longer 'valid' the offer id is available
 on this webservise ths providing a complete audit trail of what has been available. 
 
-Method have mandatory options:
-    ident;
-    passwd.
-
 Usage:
+
     my $offers = $tx->deleted_ap_offers();
 
 =head2 countries
@@ -1135,9 +1188,11 @@ Usage:
 Country codes
 
 Usage:
+
     $countries = $tx->countries();
 
 Response:
+
     [
         {
             'cc'   => 'IRI',
@@ -1153,9 +1208,11 @@ This webservice provides a comprehensive list of team and players names used by 
 For more information see Appendix 6 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $competitors = $tx->competitors();
 
 Options:
+
     pid     - by participant id i.e. the unique competitor number;
     pgrp    - by participant group name a combination of the sport and country (or league for US Sports) e.g. fbjpn is football Japan;
     cid     - by country id all competitors or teams within a particular country;
@@ -1163,6 +1220,7 @@ Options:
     name    - by alias name selection – shows all competitors that include a particular string.
 
 Response:
+
     [
         {
             'group' => 'fbeng',
@@ -1185,12 +1243,15 @@ application or database.
 For more information see Appendix 5 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $peids = $tx->deleted_peids();
 
 Options:
+
     last - select by timestamp;
 
 Response:
+
     {
         'peid' => {
             '345819' => {
@@ -1216,12 +1277,15 @@ valid they may need to be removed from any monitoring application or database.
 For more information see Appendix 4 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>).
 
 Usage:
+
     my $boids = $tx->deleted_boids();
 
 Options:
+
     last - select by timestamp;
 
 Response:
+
     {
         'timestamp' => '1202887171',
         'time' => '2008-02-13T07:19:31+00:00',
@@ -1243,9 +1307,11 @@ Response:
 This method request league or event names. See Appendix 3 in PDF documentation (C<http://txodds.com/v2/0/services.xml.html>) for more info.
 
 Usage:
+
     my $groups = $tx->groups();
 
 Options:
+
     sid  - select by year / season:
         ...
         sid => '08,09'
@@ -1256,9 +1322,11 @@ Options:
         # To find the International soccer;
 
 Example:
+
     my $groups = $tx->groups({sid => '08,09', mgid => 1027});
 
 Response:
+
     [
         {
             'sid' => '08',
@@ -1312,9 +1380,11 @@ Response:
 Bookmaker codes. More info in Appendix 3 of PDF documentation (C<http://txodds.com/v2/0/services.xml.html>.
 
 Usage:
+
     my $bookmakers = $tx->books();
 
 Options:
+
     active - request all active bookmakers:
         ...
         active => 1,
@@ -1326,6 +1396,7 @@ Options:
         ot => '3,4',
 
 Response:
+
     [
         {
             'flags' => '19',
@@ -1350,9 +1421,11 @@ Response:
 Send GET request and return response content.
 
 Usage:
+
     my $data = $tx->get( $url, \%params );
 
 Example:
+
     my $url = 'http://www.vasya.com/index.html'
     my %params = (
         user => 'vasya',
@@ -1365,9 +1438,11 @@ Example:
 =head2 parse_xml
 
 Usage:
+
     my $obj = $tx->parse_xml($xml_string, [Parser options]);
 
 Options:
+
     Function is use XML::LibXML::Simple module. See options of parser in documentation of this module.
 
 =head2 create_get_request
@@ -1375,6 +1450,7 @@ Options:
 Method create GET request with URI. Used by get().
 
 Usage:
+
     my $request = $tx->create_get_request( $url, \%params );
 
 =head2 clean_obj
@@ -1382,10 +1458,12 @@ Usage:
 Method for clean "bad" API data object, returned odds_feed(): delete unnecessary nodes, add sport node etc.
 
 Usage:
+
     my $BadObj = $tx->odds_feed();
     my $GoodObj = $tx->clean_obj($BadObj);
 
 Response:
+
     {
         'timestamp' => '%Timestamp%',
         'time' => '%Time%',
