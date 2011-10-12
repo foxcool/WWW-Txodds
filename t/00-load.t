@@ -3,7 +3,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-    use_ok( 'Txodds' ) || print "Bail out!\n";
+    use_ok( 'WWW::Txodds' ) || print "Bail out!\n";
 }
 
-diag( "Testing Txodds $Txodds::VERSION, Perl $], $^X" );
+diag( "Testing WWW::Txodds $WWW::Txodds::VERSION, Perl $], $^X" );

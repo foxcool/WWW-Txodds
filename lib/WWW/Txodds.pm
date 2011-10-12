@@ -9,7 +9,7 @@ require LWP::UserAgent;
 require XML::LibXML::Simple;
 require Carp;
 
-our $VERSION = '0.65';
+our $VERSION = '0.66';
 use constant DEBUG => $ENV{TXODDS_DEBUG} || 0;
 
 sub new {
@@ -307,7 +307,7 @@ WWW::Txodds - TXOdds.com API Perl interface.
 
 =head1 VERSION
 
-Version 0.65
+Version 0.66
 
 =head1 SYNOPSIS
 
