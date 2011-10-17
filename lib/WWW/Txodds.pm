@@ -9,7 +9,7 @@ require LWP::UserAgent;
 require XML::LibXML::Simple;
 require Carp;
 
-our $VERSION = '0.66';
+our $VERSION = '0.67';
 use constant DEBUG => $ENV{TXODDS_DEBUG} || 0;
 
 sub new {
@@ -307,7 +307,7 @@ WWW::Txodds - TXOdds.com API Perl interface.
 
 =head1 VERSION
 
-Version 0.66
+Version 0.67
 
 =head1 SYNOPSIS
 
@@ -479,9 +479,9 @@ For more information please see http://en.wikipedia.org/wiki/Unix_time
 
 Usage:
 
-active => 0 # It will return the last odds from the master database regardless of age
-#or
-active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
+    active => 0 # It will return the last odds from the master database regardless of age
+    #or
+    active => 1 # It will return only the odds that have been found during the last scan i.e. verified as the latest and most recent odds This option should be used if you require verifiable prices
 
 Example:
 
