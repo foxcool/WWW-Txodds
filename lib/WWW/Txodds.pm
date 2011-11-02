@@ -9,7 +9,7 @@ require LWP::UserAgent;
 require XML::LibXML::Simple;
 require Carp;
 
-our $VERSION = '0.67';
+our $VERSION = '0.68';
 use constant DEBUG => $ENV{TXODDS_DEBUG} || 0;
 
 sub new {
@@ -307,7 +307,7 @@ WWW::Txodds - TXOdds.com API Perl interface.
 
 =head1 VERSION
 
-Version 0.67
+Version 0.68
 
 =head1 SYNOPSIS
 
@@ -319,6 +319,15 @@ Working with http://txodds.com API.
     );
 
 =head1 SUBROUTINES/METHODS
+
+=head2 new
+
+Constructor.
+
+    my $tx = WWW::Txodds->new(
+        ident  => 'ident',
+        passwd => 'password'
+    );
 
 =head2 odds_feed
 
@@ -1508,6 +1517,12 @@ Response:
         %HomeTeam%       - First comand, home comand, first player, or favorite etc.;
         %AwayTeam%       - Second comand, home comand, second player etc.
 
+=head2 get_ident_passwd
+
+Return ident and passwd
+
+    my %params;
+    @params{ 'ident', 'passwd' } = get_ident_passwd();
 
 =head1 AUTHOR
 
