@@ -301,6 +301,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 WWW::Txodds - TXOdds.com API Perl interface.
@@ -350,7 +352,7 @@ Usage:
 =head3 Sport - Master ID Groups
 
 TXODDS provides a list of specific Master ID Groups to allow you to request just the content for
-the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 – Master ID
+the sport and country that you require. For a full list of codes please see mgroups() or Appendix 2 - Master ID
 group codes in PDF doc.
 
 Usage:
