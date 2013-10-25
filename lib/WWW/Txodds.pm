@@ -9,7 +9,7 @@ require LWP::UserAgent;
 require XML::LibXML::Simple;
 require Carp;
 
-our $VERSION = '0.68';
+our $VERSION = '0.69';
 use constant DEBUG => $ENV{TXODDS_DEBUG} || 0;
 
 sub new {
