@@ -1532,6 +1532,10 @@ Return ident and passwd
 C<foxcool@cpan.org>
 L<http://foxcool.ru>
 
+=head1 CONTRIBUTORS
+"Sergey Romanov"
+L<https://github.com/sergeyromanov>
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-txodds at rt.cpan.org>, or through
